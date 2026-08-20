@@ -301,23 +301,24 @@ def generate_password(length):
   return ''.join(random.choice(chars) for _ in range(length))
 
 
+# Working Temp Mail Generator Function
 def generate_temp_mail():
   w1 = random.choice(mail_words1)
   w2 = random.choice(mail_words2)
   w3 = random.choice(mail_words3)
   custom_username = f'{w1}{w2}{w3}'
-  domains = ['1secmail.com', '1secmail.org', '1secmail.net']
+
+  # Working domains that can successfully receive incoming emails
+  domains = ['1secmail.com', '1secmail.org', '1secmail.net', 'esiix.com']
   domain = random.choice(domains)
-  try:
-    requests.get('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1')
-  except:
-    pass
-  return f'{custom_username}@hotmail.com', f'{custom_username}@{domain}'
+
+  email = f'{custom_username}@{domain}'
+  return email
 
 
-def check_inbox_messages(real_email):
+def check_inbox_messages(email):
   try:
-    login, domain = real_email.split('@')
+    login, domain = email.split('@')
     url = f'https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}'
     response = requests.get(url)
     if response.status_code == 200:
@@ -327,9 +328,9 @@ def check_inbox_messages(real_email):
   return []
 
 
-def read_mail_content(real_email, msg_id):
+def read_mail_content(email, msg_id):
   try:
-    login, domain = real_email.split('@')
+    login, domain = email.split('@')
     url = f'https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={msg_id}'
     response = requests.get(url)
     if response.status_code == 200:
@@ -339,9 +340,7 @@ def read_mail_content(real_email, msg_id):
   return None
 
 
-# Function to extract OTP / Verification code from text body
 def extract_otp_code(body):
-  # Search for common patterns like code: 123456 or 4 to 8 digit numbers
   matches = re.findall(
       r'\b(?:code|otp|pin|verification|password)[\s:]*([A-Za-z0-9]{4,8})\b',
       body,
@@ -350,7 +349,6 @@ def extract_otp_code(body):
   if matches:
     return matches[0]
 
-  # Fallback: Find any 4 to 6 digit number in the message
   num_matches = re.findall(r'\b\d{4,6}\b', body)
   if num_matches:
     return num_matches[0]
@@ -427,7 +425,7 @@ def send_main_menu(message_or_call):
       '🔑 Password', callback_data='password_menu'
   )
   btn_mail = types.InlineKeyboardButton(
-      '📧 Outlook Mail', callback_data='gen_outlook_mail'
+      '📧 Temp Mail', callback_data='gen_outlook_mail'
   )
 
   markup.add(
@@ -555,12 +553,12 @@ def handle_callback(call):
     return
 
   if call.data == 'gen_outlook_mail':
-    display_mail, real_mail = generate_temp_mail()
-    text = f'📧 *Generated Hotmail/Outlook Address:*\n\n`{display_mail}`\n\nNicher button-e click kore inbox check korun:'
+    email = generate_temp_mail()
+    text = f'📧 *Generated Temporary Email:*\n\n`{email}`\n\nNicher button-e click kore inbox check korun:'
     markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
         types.InlineKeyboardButton(
-            '📥 Inbox Check', callback_data=f'inbox_{real_mail}'
+            '📥 Inbox Check', callback_data=f'inbox_{email}'
         ),
         types.InlineKeyboardButton(
             '🔄 New Mail', callback_data='gen_outlook_mail'
@@ -579,13 +577,10 @@ def handle_callback(call):
     return
 
   if call.data.startswith('inbox_'):
-    real_email = call.data.replace('inbox_', '')
-    username = real_email.split('@')[0]
-    display_email = f'{username}@hotmail.com'
+    email = call.data.replace('inbox_', '')
+    messages = check_inbox_messages(email)
 
-    messages = check_inbox_messages(real_email)
-
-    text = f'📧 *Email:* `{display_email}`\n\n'
+    text = f'📧 *Email:* `{email}`\n\n'
     markup = types.InlineKeyboardMarkup(row_width=1)
 
     if messages:
@@ -597,7 +592,7 @@ def handle_callback(call):
         markup.add(
             types.InlineKeyboardButton(
                 f'📩 {subject[:20]} ({sender[:15]})',
-                callback_data=f'read_{real_email}_{msg_id}',
+                callback_data=f'read_{email}_{msg_id}',
             )
         )
     else:
@@ -620,13 +615,12 @@ def handle_callback(call):
     )
     return
 
-  # Read Specific Message
   if call.data.startswith('read_'):
     parts = call.data.split('_', 2)
-    real_email = parts[1]
+    email = parts[1]
     msg_id = parts[2]
 
-    msg_data = read_mail_content(real_email, msg_id)
+    msg_data = read_mail_content(email, msg_id)
     markup = types.InlineKeyboardMarkup(row_width=1)
 
     if msg_data:
@@ -635,15 +629,14 @@ def handle_callback(call):
       body = msg_data.get('textBody', 'No text content available.')
       date = msg_data.get('date', '')
 
-      # Add Get Code button & Back to inbox button
       markup.add(
           types.InlineKeyboardButton(
-              '🔑 Get Code', callback_data=f'code_{real_email}_{msg_id}'
+              '🔑 Get Code', callback_data=f'code_{email}_{msg_id}'
           )
       )
       markup.add(
           types.InlineKeyboardButton(
-              '🔙 Back to Inbox', callback_data=f'inbox_{real_email}'
+              '🔙 Back to Inbox', callback_data=f'inbox_{email}'
           )
       )
 
@@ -655,7 +648,7 @@ def handle_callback(call):
       text = '❌ Message read korte shomossha hoyeche.'
       markup.add(
           types.InlineKeyboardButton(
-              '🔙 Back to Inbox', callback_data=f'inbox_{real_email}'
+              '🔙 Back to Inbox', callback_data=f'inbox_{email}'
           )
       )
 
@@ -668,17 +661,16 @@ def handle_callback(call):
     )
     return
 
-  # Get Code Action Handler
   if call.data.startswith('code_'):
     parts = call.data.split('_', 2)
-    real_email = parts[1]
+    email = parts[1]
     msg_id = parts[2]
 
-    msg_data = read_mail_content(real_email, msg_id)
+    msg_data = read_mail_content(email, msg_id)
     markup = types.InlineKeyboardMarkup(row_width=1)
     markup.add(
         types.InlineKeyboardButton(
-            '🔙 Back to Message', callback_data=f'read_{real_email}_{msg_id}'
+            '🔙 Back to Message', callback_data=f'read_{email}_{msg_id}'
         )
     )
 
@@ -704,7 +696,6 @@ def handle_callback(call):
     )
     return
 
-  # Name / Password / Username generation logic
   name = ''
   markup = types.InlineKeyboardMarkup(row_width=2)
 
