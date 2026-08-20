@@ -256,8 +256,36 @@ last_names = [
 ]
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
 
+# Words for Hotmail/Outlook style mail generation
+mail_words1 = [
+    'grey',
+    'dark',
+    'cool',
+    'swift',
+    'frost',
+    'shadow',
+    'neon',
+    'iron',
+    'alpha',
+    'cyber',
+    'mega',
+    'lunar',
+]
+mail_words2 = [
+    'savage',
+    'knight',
+    'coder',
+    'gamer',
+    'wolf',
+    'dragon',
+    'storm',
+    'ninja',
+    'Vortex',
+    'blaze',
+]
+mail_words3 = ['cedc', 'pro', 'x', 'zen', 'bot', 'hub', 'net', 'sec']
 
-# Username Generator Function
+
 def generate_username(gender):
   if gender == 'male':
     f_name = random.choice(male_first_names).lower()
@@ -268,31 +296,35 @@ def generate_username(gender):
   return f'{f_name}_{l_name}{number}'
 
 
-# Password Generator Function
 def generate_password(length):
   chars = string.ascii_letters + string.digits + '@#$%&!-_'
   return ''.join(random.choice(chars) for _ in range(length))
 
 
-# Temp Mail (Outlook/Hotmail style) Functions
+# Custom Hotmail/Outlook style Temp Mail Generator
 def generate_temp_mail():
+  w1 = random.choice(mail_words1)
+  w2 = random.choice(mail_words2)
+  w3 = random.choice(mail_words3)
+  custom_username = f'{w1}{w2}{w3}'
+
+  domains = ['1secmail.com', '1secmail.org', '1secmail.net']
+  domain = random.choice(domains)
+
+  # API-তে রেজিস্টার করার জন্য
   try:
-    response = requests.get(
-        'https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1'
+    requests.get(
+        f'https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1'
     )
-    if response.status_code == 200:
-      mail = response.json()
-      if mail:
-        # Replacing domain to look like outlook/hotmail style if needed, or keeping standard secure domains
-        return mail[0]
   except:
     pass
-  return 'user_' + ''.join(random.choices(string.digits, k=5)) + '@1secmail.com'
+
+  return f'{custom_username}@hotmail.com', f'{custom_username}@{domain}'
 
 
-def check_inbox_messages(email):
+def check_inbox_messages(real_email):
   try:
-    login, domain = email.split('@')
+    login, domain = real_email.split('@')
     url = f'https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}'
     response = requests.get(url)
     if response.status_code == 200:
@@ -302,9 +334,9 @@ def check_inbox_messages(email):
   return []
 
 
-def read_mail_content(email, msg_id):
+def read_mail_content(real_email, msg_id):
   try:
-    login, domain = email.split('@')
+    login, domain = real_email.split('@')
     url = f'https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={msg_id}'
     response = requests.get(url)
     if response.status_code == 200:
@@ -314,7 +346,6 @@ def read_mail_content(email, msg_id):
   return None
 
 
-# Unicode Font Application Function
 def apply_unicode_font(text, style):
   emj = random.choice(emojis)
   res = ''
@@ -419,7 +450,6 @@ def handle_callback(call):
     send_main_menu(call)
     return
 
-  # Boy Font Selection Menu
   if call.data == 'boy_font_menu':
     markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
@@ -445,7 +475,6 @@ def handle_callback(call):
     )
     return
 
-  # Girl Font Selection Menu
   if call.data == 'girl_font_menu':
     markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
@@ -471,7 +500,6 @@ def handle_callback(call):
     )
     return
 
-  # Username Sub-Menu
   if call.data == 'username_menu':
     markup = types.InlineKeyboardMarkup(row_width=2)
     btn_boy = types.InlineKeyboardButton(
@@ -494,7 +522,6 @@ def handle_callback(call):
     )
     return
 
-  # Password Sub-Menu
   if call.data == 'password_menu':
     markup = types.InlineKeyboardMarkup(row_width=2)
     btn_8 = types.InlineKeyboardButton('🔒 8 Digits', callback_data='pass_8')
@@ -515,14 +542,14 @@ def handle_callback(call):
     )
     return
 
-  # Outlook Mail Generation
+  # Outlook/Hotmail Mail Generation (Displaying hotmail.com format, working inbox backend)
   if call.data == 'gen_outlook_mail':
-    email = generate_temp_mail()
-    text = f'📧 *Generated Outlook/Hotmail Address:*\n\n`{email}`\n\nNicher button-e click kore inbox check korun:'
+    display_mail, real_mail = generate_temp_mail()
+    text = f'📧 *Generated Hotmail/Outlook Address:*\n\n`{display_mail}`\n\nNicher button-e click kore inbox check korun:'
     markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
         types.InlineKeyboardButton(
-            '📥 Inbox Check', callback_data=f'inbox_{email}'
+            '📥 Inbox Check', callback_data=f'inbox_{real_mail}'
         ),
         types.InlineKeyboardButton(
             '🔄 New Mail', callback_data='gen_outlook_mail'
@@ -540,12 +567,15 @@ def handle_callback(call):
     )
     return
 
-  # Check Inbox Action
   if call.data.startswith('inbox_'):
-    email = call.data.replace('inbox_', '')
-    messages = check_inbox_messages(email)
+    real_email = call.data.replace('inbox_', '')
+    # Display email formatting back to hotmail style for user clarity
+    username = real_email.split('@')[0]
+    display_email = f'{username}@hotmail.com'
 
-    text = f'📧 *Email:* `{email}`\n\n'
+    messages = check_inbox_messages(real_email)
+
+    text = f'📧 *Email:* `{display_email}`\n\n'
     markup = types.InlineKeyboardMarkup(row_width=1)
 
     if messages:
@@ -557,7 +587,7 @@ def handle_callback(call):
         markup.add(
             types.InlineKeyboardButton(
                 f'📩 {subject[:20]} ({sender[:15]})',
-                callback_data=f'read_{email}_{msg_id}',
+                callback_data=f'read_{real_email}_{msg_id}',
             )
         )
     else:
@@ -580,17 +610,16 @@ def handle_callback(call):
     )
     return
 
-  # Read Specific Message
   if call.data.startswith('read_'):
     parts = call.data.split('_', 2)
-    email = parts[1]
+    real_email = parts[1]
     msg_id = parts[2]
 
-    msg_data = read_mail_content(email, msg_id)
+    msg_data = read_mail_content(real_email, msg_id)
     markup = types.InlineKeyboardMarkup(row_width=1)
     markup.add(
         types.InlineKeyboardButton(
-            '🔙 Back to Inbox', callback_data=f'inbox_{email}'
+            '🔙 Back to Inbox', callback_data=f'inbox_{real_email}'
         )
     )
 
@@ -616,7 +645,6 @@ def handle_callback(call):
     )
     return
 
-  # Generation Logic for names/passwords/etc
   name = ''
   markup = types.InlineKeyboardMarkup(row_width=2)
 
