@@ -12,15 +12,22 @@ API_TOKEN = '8994060740:AAFpgfuGajnOA-HLAmae5QmWaypDdRIR_aE'
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-# [Data lists same as previous]
-# ... (keeping code concise) ...
-# (Ensure you keep the full lists of names from the previous version)
+# [Name Lists - Keep your existing lists here]
+male_first_names = ['Aryan', 'Tanvir', 'Rahim', 'Sakib', 'Fahim', 'Nayeem', 'Rakib', 'Mehedi']
+female_first_names = ['Sadia', 'Anika', 'Tasfia', 'Noshin', 'Faria', 'Sumaiya', 'Jannat', 'Ishrat']
+last_names = ['Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder']
+emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
+mail_words1 = ['grey', 'dark', 'cool', 'swift', 'frost', 'shadow', 'neon', 'iron', 'alpha']
+mail_words2 = ['savage', 'knight', 'coder', 'gamer', 'wolf', 'dragon', 'storm', 'ninja']
+mail_words3 = ['cedc', 'pro', 'x', 'zen', 'bot', 'hub', 'net', 'sec']
 
 def generate_temp_mail():
-    # Only using trusted domains that usually work
-    username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
-    domain = '1secmail.com' # Best for reliable testing
-    return f'{username}@hotmail.com', f'{username}@{domain}'
+    username = f'{random.choice(mail_words1)}{random.choice(mail_words2)}{random.choice(mail_words3)}'
+    # Display domain for user
+    display_domain = random.choice(['hotmail.com', 'outlook.com'])
+    # Backend domain for functionality
+    real_domain = '1secmail.com' 
+    return f'{username}@{display_domain}', f'{username}@{real_domain}'
 
 def check_inbox_messages(real_email):
     try:
@@ -29,8 +36,7 @@ def check_inbox_messages(real_email):
         response = requests.get(url, timeout=10)
         if response.status_code == 200:
             return response.json()
-    except Exception as e:
-        print(f"Error: {e}")
+    except: pass
     return []
 
 def read_mail_content(real_email, msg_id):
@@ -40,8 +46,7 @@ def read_mail_content(real_email, msg_id):
         response = requests.get(url, timeout=10)
         if response.status_code == 200:
             return response.json()
-    except Exception as e:
-        print(f"Error: {e}")
+    except: pass
     return None
 
 def extract_otp_code(body):
@@ -51,29 +56,29 @@ def extract_otp_code(body):
     num_match = re.search(r'\b\d{4,6}\b', body)
     return num_match.group(0) if num_match else None
 
-# [Include all other functions from previous version like apply_unicode_font, etc.]
-# ...
-
 @bot.callback_query_handler(func=lambda call: True)
 def handle_callback(call):
-    # ... (Main Menu logic) ...
+    if call.data == 'main_menu':
+        send_main_menu(call)
+        return
 
-    # UPDATED: Improved Mail Logic
+    # GENERATE MAIL LOGIC (FORCING HOTMAIL/OUTLOOK)
     if call.data == 'gen_outlook_mail':
         display_mail, real_mail = generate_temp_mail()
-        text = f'📧 *Generated Hotmail Address:*\n\n`{display_mail}`\n\n🕒 *Instruction:*\n১. এই মেইলে ভেরিফিকেশন পাঠান।\n২. ২ মিনিট পর "Refresh Inbox" বাটনে ক্লিক করুন।'
+        text = f'📧 *Generated Email Address:*\n\n`{display_mail}`\n\n📥 *Inbox check korte nicher button-e click korun:*'
         markup = types.InlineKeyboardMarkup(row_width=2)
         markup.add(
-            types.InlineKeyboardButton('📥 Inbox Check', callback_data=f'inbox_{real_mail}'),
+            types.InlineKeyboardButton('📥 Inbox Check', callback_data=f'inbox_{real_mail}_{display_mail}'),
+            types.InlineKeyboardButton('🔄 New Mail', callback_data='gen_outlook_mail'),
             types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu')
         )
         bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
         return
 
+    # INBOX LOGIC
     if call.data.startswith('inbox_'):
-        real_email = call.data.replace('inbox_', '')
-        username = real_email.split('@')[0]
-        display_email = f'{username}@hotmail.com'
+        parts = call.data.split('_', 2)
+        real_email, display_email = parts[1], parts[2]
         
         messages = check_inbox_messages(real_email)
         text = f'📧 *Email:* `{display_email}`\n\n'
@@ -82,10 +87,9 @@ def handle_callback(call):
         if messages:
             text += f'📥 *Inbox-e {len(messages)} টি মেসেজ পাওয়া গেছে:*'
             for msg in messages:
-                # Add specific identifier for read callback
-                markup.add(types.InlineKeyboardButton(f'📩 {msg.get("subject", "No Subject")[:20]}', callback_data=f'read_{real_email}_{msg.get("id")}'))
+                markup.add(types.InlineKeyboardButton(f'📩 {msg.get("subject", "No Subject")[:20]}', callback_data=f'read_{real_email}_{display_email}_{msg.get("id")}'))
         else:
-            text += '📭 *Inbox is empty!* \n\n*Tips:* ১০-২০ সেকেন্ড অপেক্ষা করে রিফ্রেশ করুন।'
+            text += '📭 *Inbox is empty! (Please wait for OTP)*'
         
         markup.add(
             types.InlineKeyboardButton('🔄 Refresh Inbox', callback_data=call.data),
@@ -94,4 +98,37 @@ def handle_callback(call):
         bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
         return
 
-    # ... (Keep remaining code the same) ...
+    # READ LOGIC
+    if call.data.startswith('read_'):
+        parts = call.data.split('_', 3)
+        real_email, display_email, msg_id = parts[1], parts[2], parts[3]
+        msg_data = read_mail_content(real_email, msg_id)
+        
+        markup = types.InlineKeyboardMarkup(row_width=1)
+        markup.add(
+            types.InlineKeyboardButton('🔑 Get Code', callback_data=f'code_{real_email}_{display_email}_{msg_id}'),
+            types.InlineKeyboardButton('🔙 Back to Inbox', callback_data=f'inbox_{real_email}_{display_email}')
+        )
+        
+        text = '❌ Message read failed.'
+        if msg_data:
+            text = f'📩 *From:* `{msg_data.get("from")}`\n📌 *Subject:* `{msg_data.get("subject")}`\n\n💬 *Body:*\n`{msg_data.get("textBody", "")[:400]}`'
+        bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+        return
+
+    # GET CODE LOGIC
+    if call.data.startswith('code_'):
+        parts = call.data.split('_', 3)
+        real_email, display_email, msg_id = parts[1], parts[2], parts[3]
+        msg_data = read_mail_content(real_email, msg_id)
+        
+        markup = types.InlineKeyboardMarkup(row_width=1)
+        markup.add(types.InlineKeyboardButton('🔙 Back to Message', callback_data=f'read_{real_email}_{display_email}_{msg_id}'))
+        
+        if msg_data:
+            otp = extract_otp_code(msg_data.get('textBody', ''))
+            text = f'🔑 *Verification Code:* `{otp}`' if otp else '⚠️ *Code paowa jayni, body manually check korun.*'
+        bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+        return
+
+# [Keep your other existing functions (apply_unicode_font, send_welcome, etc) as they were]
