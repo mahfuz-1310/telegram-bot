@@ -1,5 +1,6 @@
 import os
 import random
+import re
 import string
 import threading
 from flask import Flask
@@ -256,7 +257,6 @@ last_names = [
 ]
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
 
-# Words for Hotmail/Outlook style mail generation
 mail_words1 = [
     'grey',
     'dark',
@@ -280,7 +280,7 @@ mail_words2 = [
     'dragon',
     'storm',
     'ninja',
-    'Vortex',
+    'vortex',
     'blaze',
 ]
 mail_words3 = ['cedc', 'pro', 'x', 'zen', 'bot', 'hub', 'net', 'sec']
@@ -301,24 +301,17 @@ def generate_password(length):
   return ''.join(random.choice(chars) for _ in range(length))
 
 
-# Custom Hotmail/Outlook style Temp Mail Generator
 def generate_temp_mail():
   w1 = random.choice(mail_words1)
   w2 = random.choice(mail_words2)
   w3 = random.choice(mail_words3)
   custom_username = f'{w1}{w2}{w3}'
-
   domains = ['1secmail.com', '1secmail.org', '1secmail.net']
   domain = random.choice(domains)
-
-  # API-তে রেজিস্টার করার জন্য
   try:
-    requests.get(
-        f'https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1'
-    )
+    requests.get('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1')
   except:
     pass
-
   return f'{custom_username}@hotmail.com', f'{custom_username}@{domain}'
 
 
@@ -343,6 +336,25 @@ def read_mail_content(real_email, msg_id):
       return response.json()
   except:
     pass
+  return None
+
+
+# Function to extract OTP / Verification code from text body
+def extract_otp_code(body):
+  # Search for common patterns like code: 123456 or 4 to 8 digit numbers
+  matches = re.findall(
+      r'\b(?:code|otp|pin|verification|password)[\s:]*([A-Za-z0-9]{4,8})\b',
+      body,
+      re.IGNORECASE,
+  )
+  if matches:
+    return matches[0]
+
+  # Fallback: Find any 4 to 6 digit number in the message
+  num_matches = re.findall(r'\b\d{4,6}\b', body)
+  if num_matches:
+    return num_matches[0]
+
   return None
 
 
@@ -542,7 +554,6 @@ def handle_callback(call):
     )
     return
 
-  # Outlook/Hotmail Mail Generation (Displaying hotmail.com format, working inbox backend)
   if call.data == 'gen_outlook_mail':
     display_mail, real_mail = generate_temp_mail()
     text = f'📧 *Generated Hotmail/Outlook Address:*\n\n`{display_mail}`\n\nNicher button-e click kore inbox check korun:'
@@ -569,7 +580,6 @@ def handle_callback(call):
 
   if call.data.startswith('inbox_'):
     real_email = call.data.replace('inbox_', '')
-    # Display email formatting back to hotmail style for user clarity
     username = real_email.split('@')[0]
     display_email = f'{username}@hotmail.com'
 
@@ -610,6 +620,7 @@ def handle_callback(call):
     )
     return
 
+  # Read Specific Message
   if call.data.startswith('read_'):
     parts = call.data.split('_', 2)
     real_email = parts[1]
@@ -617,11 +628,6 @@ def handle_callback(call):
 
     msg_data = read_mail_content(real_email, msg_id)
     markup = types.InlineKeyboardMarkup(row_width=1)
-    markup.add(
-        types.InlineKeyboardButton(
-            '🔙 Back to Inbox', callback_data=f'inbox_{real_email}'
-        )
-    )
 
     if msg_data:
       sender = msg_data.get('from', 'Unknown')
@@ -629,12 +635,29 @@ def handle_callback(call):
       body = msg_data.get('textBody', 'No text content available.')
       date = msg_data.get('date', '')
 
+      # Add Get Code button & Back to inbox button
+      markup.add(
+          types.InlineKeyboardButton(
+              '🔑 Get Code', callback_data=f'code_{real_email}_{msg_id}'
+          )
+      )
+      markup.add(
+          types.InlineKeyboardButton(
+              '🔙 Back to Inbox', callback_data=f'inbox_{real_email}'
+          )
+      )
+
       text = (
           f'📩 *From:* `{sender}`\n📌 *Subject:* `{subject}`\n🕒 *Date:*'
           f' `{date}`\n\n💬 *Message Body:*\n`{body}`'
       )
     else:
       text = '❌ Message read korte shomossha hoyeche.'
+      markup.add(
+          types.InlineKeyboardButton(
+              '🔙 Back to Inbox', callback_data=f'inbox_{real_email}'
+          )
+      )
 
     bot.edit_message_text(
         text,
@@ -645,6 +668,43 @@ def handle_callback(call):
     )
     return
 
+  # Get Code Action Handler
+  if call.data.startswith('code_'):
+    parts = call.data.split('_', 2)
+    real_email = parts[1]
+    msg_id = parts[2]
+
+    msg_data = read_mail_content(real_email, msg_id)
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    markup.add(
+        types.InlineKeyboardButton(
+            '🔙 Back to Message', callback_data=f'read_{real_email}_{msg_id}'
+        )
+    )
+
+    if msg_data:
+      body = msg_data.get('textBody', '')
+      otp = extract_otp_code(body)
+      if otp:
+        text = f'🔑 *Extracted Verification Code:*\n\n`{otp}`'
+      else:
+        text = (
+            '⚠️ *Kono OTP ba code paowa jayni!* Message-ti'
+            ' poore nite paren.'
+        )
+    else:
+      text = '❌ Message fetch korte shomossha hoyeche.'
+
+    bot.edit_message_text(
+        text,
+        chat_id=call.message.chat.id,
+        message_id=call.message.id,
+        parse_mode='Markdown',
+        reply_markup=markup,
+    )
+    return
+
+  # Name / Password / Username generation logic
   name = ''
   markup = types.InlineKeyboardMarkup(row_width=2)
 
