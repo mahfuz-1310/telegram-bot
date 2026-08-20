@@ -74,6 +74,7 @@ stylish_names = [
     '❄️ Frost ❄️',
     '🌙 Eclipse 🌙',
 ]
+emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎', '🔥']
 
 
 # Username Generator Function
@@ -85,7 +86,7 @@ def generate_username(gender):
 
   l_name = random.choice(last_names).lower()
   number = random.randint(10, 999)
-  return f'{f_name}_{l_name}{number}'
+  return f'{f_name}_{l_name}{number} {random.choice(emojis)}'
 
 
 # Password Generator Function with Length
@@ -94,18 +95,19 @@ def generate_password(length):
   return ''.join(random.choice(chars) for _ in range(length))
 
 
-# Font/Style Application Function
+# Font/Style Application Function with Emoji
 def apply_font(text, font_style):
+  emj = random.choice(emojis)
   if font_style == 'bold':
-    return f'*{text}*'
+    return f'*{text}* {emj}'
   elif font_style == 'italic':
-    return f'_{text}_'
+    return f'_{text}_ {emj}'
   elif font_style == 'mono':
-    return f'`{text}`'
+    return f'`{text}` {emj}'
   elif font_style == 'strike':
-    return f'~{text}~'
+    return f'~{text}~ {emj}'
   else:
-    return text
+    return f'{text} {emj}'
 
 
 @bot.message_handler(commands=['start', 'help'])
@@ -349,7 +351,7 @@ def handle_callback(call):
     )
 
   elif call.data == 'gen_stylish':
-    name = random.choice(stylish_names)
+    name = f'{random.choice(stylish_names)} {random.choice(emojis)}'
     markup.add(
         types.InlineKeyboardButton(
             '🔄 Generate Again', callback_data='gen_stylish'
@@ -361,7 +363,10 @@ def handle_callback(call):
 
   elif call.data == 'gen_random':
     all_names = male_first_names + female_first_names
-    name = f'{random.choice(all_names)} {random.choice(last_names)}'
+    name = (
+        f'{random.choice(all_names)} {random.choice(last_names)}'
+        f' {random.choice(emojis)}'
+    )
     markup.add(
         types.InlineKeyboardButton(
             '🔄 Generate Again', callback_data='gen_random'
