@@ -89,25 +89,56 @@ def generate_username(gender):
   return f'{f_name}_{l_name}{number} {random.choice(emojis)}'
 
 
-# Password Generator Function with Length
+# Password Generator Function with Length up to 45
 def generate_password(length):
   chars = string.ascii_letters + string.digits + '@#$%&!-_'
   return ''.join(random.choice(chars) for _ in range(length))
 
 
-# Font/Style Application Function with Emoji
-def apply_font(text, font_style):
+# Advanced Unicode Font Application Function
+def apply_unicode_font(text, style):
   emj = random.choice(emojis)
-  if font_style == 'bold':
-    return f'*{text}* {emj}'
-  elif font_style == 'italic':
-    return f'_{text}_ {emj}'
-  elif font_style == 'mono':
-    return f'`{text}` {emj}'
-  elif font_style == 'strike':
-    return f'~{text}~ {emj}'
-  else:
-    return f'{text} {emj}'
+  res = ''
+  for c in text:
+    o = ord(c)
+    if style == 'bold_sans':
+      if 65 <= o <= 90:
+        res += chr(120276 + (o - 65))
+      elif 97 <= o <= 122:
+        res += chr(120302 + (o - 97))
+      else:
+        res += c
+    elif style == 'italic':
+      if 65 <= o <= 90:
+        res += chr(119808 + (o - 65))
+      elif 97 <= o <= 122:
+        res += chr(119834 + (o - 97))
+      else:
+        res += c
+    elif style == 'mono':
+      if 65 <= o <= 90:
+        res += chr(120432 + (o - 65))
+      elif 97 <= o <= 122:
+        res += chr(120458 + (o - 97))
+      else:
+        res += c
+    elif style == 'circled':
+      if 65 <= o <= 90:
+        res += chr(9398 + (o - 65))
+      elif 97 <= o <= 122:
+        res += chr(9424 + (o - 97))
+      else:
+        res += c
+    elif style == 'bold_serif':
+      if 65 <= o <= 90:
+        res += chr(119964 + (o - 65))
+      elif 97 <= o <= 122:
+        res += chr(119990 + (o - 97))
+      else:
+        res += c
+    else:
+      res += c
+  return f'{res} {emj}'
 
 
 @bot.message_handler(commands=['start', 'help'])
@@ -162,17 +193,21 @@ def handle_callback(call):
   if call.data == 'boy_font_menu':
     markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
-        types.InlineKeyboardButton('<b>Bold</b>', callback_data='boy_bold'),
-        types.InlineKeyboardButton('<i>Italic</i>', callback_data='boy_italic'),
-        types.InlineKeyboardButton('<code>Mono</code>', callback_data='boy_mono'),
-        types.InlineKeyboardButton('<s>Strike</s>', callback_data='boy_strike'),
-        types.InlineKeyboardButton('Normal', callback_data='boy_normal'),
+        types.InlineKeyboardButton(
+            '𝗔-𝗭 Bold Sans', callback_data='boy_bold_sans'
+        ),
+        types.InlineKeyboardButton('𝐴-𝑍 Italic', callback_data='boy_italic'),
+        types.InlineKeyboardButton('𝙰-𝚣 Monospace', callback_data='boy_mono'),
+        types.InlineKeyboardButton('Ⓐ-Ⓩ Circled', callback_data='boy_circled'),
+        types.InlineKeyboardButton(
+            '𝐀-𝐳 Bold Serif', callback_data='boy_bold_serif'
+        ),
         types.InlineKeyboardButton(
             '🔙 Back to Menu', callback_data='main_menu'
         ),
     )
     bot.edit_message_text(
-        '👦 *Select Boy Name Font Style:*',
+        '👦 *Select Boy Font Style:*',
         chat_id=call.message.chat.id,
         message_id=call.message.id,
         parse_mode='Markdown',
@@ -184,17 +219,21 @@ def handle_callback(call):
   if call.data == 'girl_font_menu':
     markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
-        types.InlineKeyboardButton('<b>Bold</b>', callback_data='girl_bold'),
-        types.InlineKeyboardButton('<i>Italic</i>', callback_data='girl_italic'),
-        types.InlineKeyboardButton('<code>Mono</code>', callback_data='girl_mono'),
-        types.InlineKeyboardButton('<s>Strike</s>', callback_data='girl_strike'),
-        types.InlineKeyboardButton('Normal', callback_data='girl_normal'),
+        types.InlineKeyboardButton(
+            '𝗔-𝗭 Bold Sans', callback_data='girl_bold_sans'
+        ),
+        types.InlineKeyboardButton('𝐴-𝑍 Italic', callback_data='girl_italic'),
+        types.InlineKeyboardButton('𝙰-𝚣 Monospace', callback_data='girl_mono'),
+        types.InlineKeyboardButton('Ⓐ-Ⓩ Circled', callback_data='girl_circled'),
+        types.InlineKeyboardButton(
+            '𝐀-𝐳 Bold Serif', callback_data='girl_bold_serif'
+        ),
         types.InlineKeyboardButton(
             '🔙 Back to Menu', callback_data='main_menu'
         ),
     )
     bot.edit_message_text(
-        '👧 *Select Girl Name Font Style:*',
+        '👧 *Select Girl Font Style:*',
         chat_id=call.message.chat.id,
         message_id=call.message.id,
         parse_mode='Markdown',
@@ -225,7 +264,7 @@ def handle_callback(call):
     )
     return
 
-  # Password Sub-Menu (Length Selection up to 45)
+  # Password Sub-Menu (Length up to 45)
   if call.data == 'password_menu':
     markup = types.InlineKeyboardMarkup(row_width=2)
     btn_8 = types.InlineKeyboardButton('🔒 8 Digits', callback_data='pass_8')
@@ -252,11 +291,11 @@ def handle_callback(call):
 
   # Boy Fonts Logic
   if call.data.startswith('boy_'):
-    style = call.data.split('_')[1]
+    style = call.data.replace('boy_', '')
     raw_name = (
         f'{random.choice(male_first_names)} {random.choice(last_names)}'
     )
-    name = apply_font(raw_name, style)
+    name = apply_unicode_font(raw_name, style)
     markup.add(
         types.InlineKeyboardButton(
             '🔄 Generate Again', callback_data=call.data
@@ -268,11 +307,11 @@ def handle_callback(call):
 
   # Girl Fonts Logic
   elif call.data.startswith('girl_'):
-    style = call.data.split('_')[1]
+    style = call.data.replace('girl_', '')
     raw_name = (
         f'{random.choice(female_first_names)} {random.choice(last_names)}'
     )
-    name = apply_font(raw_name, style)
+    name = apply_unicode_font(raw_name, style)
     markup.add(
         types.InlineKeyboardButton(
             '🔄 Generate Again', callback_data=call.data
