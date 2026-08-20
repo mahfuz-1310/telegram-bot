@@ -2,8 +2,6 @@ import os
 import random
 import string
 import threading
-import secrets
-import uuid
 from flask import Flask
 import telebot
 from telebot import types
@@ -12,10 +10,33 @@ API_TOKEN = '8994060740:AAFpgfuGajnOA-HLAmae5QmWaypDdRIR_aE'
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-# Data Lists for Names and Passwords
-male_first_names = ['Aryan', 'Tanvir', 'Rahim', 'Sakib', 'Fahim', 'Nayeem', 'Rakib', 'Mehedi', 'Mahin', 'Sabbir', 'Arif', 'Shanto']
-female_first_names = ['Sadia', 'Anika', 'Tasfia', 'Noshin', 'Faria', 'Sumaiya', 'Jannat', 'Ishrat', 'Riya', 'Muna', 'Tisha', 'Mim']
-last_names = ['Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder', 'Hasan', 'Sarker']
+# Expanded Data Lists for Names and Passwords
+male_first_names = [
+    'Aryan', 'Tanvir', 'Rahim', 'Sakib', 'Fahim', 'Nayeem', 'Rakib', 'Mehedi', 'Mahin', 'Sabbir', 'Arif', 'Shanto',
+    'Imran', 'Tanim', 'Jahid', 'Raihan', 'Faysal', 'Nabil', 'Shihab', 'Ashik', 'Tariq', 'Sohan', 'Rokon', 'Nayem',
+    'Arman', 'Rassel', 'Biplob', 'Shohan', 'Parvez', 'Rifat', 'Siam', 'Zihad', 'Al Amin', 'Touhid', 'Rahat',
+    'Nafees', 'Adnan', 'Tamim', 'Mashrafe', 'Shakil', 'Sazzad', 'Joy', 'Nibir', 'Fahad', 'Ridoy', 'Alvi', 'Monir',
+    'Sujon', 'Ripon', 'Shahed', 'Firoz', 'Masum', 'Belal', 'Sumon', 'Rashed', 'Nazmul', 'Mamun', 'Litón', 'Sohel'
+]
+
+female_first_names = [
+    'Sadia', 'Anika', 'Tasfia', 'Noshin', 'Faria', 'Sumaiya', 'Jannat', 'Ishrat', 'Riya', 'Muna', 'Tisha', 'Mim',
+    'Nusrat', 'Sabrina', 'Mehnaz', 'Farzana', 'Tabassum', 'Tanzina', 'Lamia', 'Maliha', 'Zerin', 'Priya', 'Puja',
+    'Farhin', 'Bushra', 'Sanjida', 'Mitu', 'Bristy', 'Nila', 'Tania', 'Sharmin', 'Jerin', 'Fariha', 'Sneha', 'Meem',
+    'Nadia', 'Prova', 'Mehjabin', 'Puspita', 'Mou', 'Swarna', 'Sneha', 'Trisha', 'Rumu', 'Porshi', 'Mouri', 'Mimia',
+    'Afsana', 'Farha', 'Tania', 'Sultana', 'Jesmin', 'Roksana', 'Shorna', 'Tonima', 'Laboni', 'Nipa', 'Bristy'
+]
+
+last_names = [
+    'Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder', 'Hasan', 'Sarker',
+    'Ali', 'Mollah', 'Bhuiyan', 'Mazumder', 'Siddique', 'Karim', 'Talukdar', 'Mia', 'Biswas', 'Roy',
+    'Akther', 'Begum', 'Khatun', 'Dewan', 'Miah', 'Sheikh', 'Bhowmick', 'Sen', 'Das', 'Munshi',
+    'Shikder', 'Sarder', 'Pramanik', 'Vhowmick', 'Barua', 'Chakma', 'Golder', 'Hajra', 'Kundu', 'Nag'
+]
+
+gamer_tags = ['Shadow', 'Viper', 'Ghost', 'Sniper', 'Ninja', 'Cyber', 'Nexus', 'Blaze', 'Storm', 'Titan', 'Apex', 'Phantom']
+cool_words = ['Alpha', 'Beta', 'Zero', 'Dark', 'Swift', 'Prime', 'Elite', 'Legend', 'Savage', 'Cyborg']
+
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
 
 def apply_unicode_font(text, style):
@@ -58,9 +79,8 @@ def send_main_menu(message_or_call):
     btn_random = types.InlineKeyboardButton('🎲 Random Name', callback_data='gen_random')
     btn_user = types.InlineKeyboardButton('👤 Username', callback_data='username_menu')
     btn_pass = types.InlineKeyboardButton('🔑 Password', callback_data='password_menu')
-    btn_auth = types.InlineKeyboardButton('🔐 Auth Token', callback_data='auth_menu')
     
-    markup.add(btn_male, btn_female, btn_stylish, btn_random, btn_user, btn_pass, btn_auth)
+    markup.add(btn_male, btn_female, btn_stylish, btn_random, btn_user, btn_pass)
     text = '🌟 *Ultimate Generator Bot*\n\nSelect a category:'
     
     if isinstance(message_or_call, types.Message):
@@ -102,11 +122,13 @@ def handle_callback(call):
     if call.data == 'username_menu':
         markup = types.InlineKeyboardMarkup(row_width=2)
         markup.add(
-            types.InlineKeyboardButton('👦 Boy Username', callback_data='gen_user_male'),
-            types.InlineKeyboardButton('👧 Girl Username', callback_data='gen_user_female'),
+            types.InlineKeyboardButton('🎮 Gamer Username', callback_data='user_gamer'),
+            types.InlineKeyboardButton('💼 Pro Username', callback_data='user_pro'),
+            types.InlineKeyboardButton('😎 Cool Username', callback_data='user_cool'),
+            types.InlineKeyboardButton('🎲 Random Username', callback_data='user_random'),
             types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
         )
-        bot.edit_message_text('👤 *Select Username Gender:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+        bot.edit_message_text('👤 *Select Username Style:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
         return
 
     if call.data == 'password_menu':
@@ -118,17 +140,6 @@ def handle_callback(call):
             types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
         )
         bot.edit_message_text('🔑 *Select Password Length:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
-        return
-
-    if call.data == 'auth_menu':
-        markup = types.InlineKeyboardMarkup(row_width=1)
-        markup.add(
-            types.InlineKeyboardButton('🔑 API Key (Hex)', callback_data='auth_apikey'),
-            types.InlineKeyboardButton('🛡️ Bearer Token', callback_data='auth_bearer'),
-            types.InlineKeyboardButton('🆔 UUID v4', callback_data='auth_uuid'),
-            types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
-        )
-        bot.edit_message_text('🔐 *Select Authentication Type:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
         return
 
     # Generators Output Logic
@@ -145,25 +156,22 @@ def handle_callback(call):
         raw_name = f"{random.choice(female_first_names)} {random.choice(last_names)}"
         result_text = apply_unicode_font(raw_name, style)
         markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='girl_font_menu'))
-    elif call.data == 'gen_user_male':
-        result_text = f"{random.choice(male_first_names).lower()}_{random.choice(last_names).lower()}{random.randint(10,999)}"
-        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_user_male'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
-    elif call.data == 'gen_user_female':
-        result_text = f"{random.choice(female_first_names).lower()}_{random.choice(last_names).lower()}{random.randint(10,999)}"
-        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_user_female'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
+    elif call.data == 'user_gamer':
+        result_text = f"{random.choice(gamer_tags)}_{random.choice(male_first_names).lower()}{random.randint(10,999)}"
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_gamer'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
+    elif call.data == 'user_pro':
+        result_text = f"{random.choice(male_first_names + female_first_names).lower()}.{random.choice(last_names).lower()}{random.randint(100,999)}"
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_pro'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
+    elif call.data == 'user_cool':
+        result_text = f"x_{random.choice(cool_words).lower()}_{random.choice(male_first_names + female_first_names).lower()}_x"
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_cool'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
+    elif call.data == 'user_random':
+        result_text = f"{random.choice(cool_words).lower()}{random.choice(last_names).lower()}{random.randint(1000,9999)}"
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_random'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
     elif call.data.startswith('pass_'):
         length = int(call.data.replace('pass_', ''))
         result_text = ''.join(random.choices(string.ascii_letters + string.digits + '@#$%!', k=length))
         markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='password_menu'))
-    elif call.data == 'auth_apikey':
-        result_text = secrets.token_hex(20) # 40 characters hex API key
-        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='auth_apikey'), types.InlineKeyboardButton('🔙 Back', callback_data='auth_menu'))
-    elif call.data == 'auth_bearer':
-        result_text = secrets.token_urlsafe(32) # Secure URL-safe token
-        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='auth_bearer'), types.InlineKeyboardButton('🔙 Back', callback_data='auth_menu'))
-    elif call.data == 'auth_uuid':
-        result_text = str(uuid.uuid4())
-        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='auth_uuid'), types.InlineKeyboardButton('🔙 Back', callback_data='auth_menu'))
     elif call.data == 'gen_stylish':
         f_name = random.choice(male_first_names + female_first_names).lower()
         l_name = random.choice(last_names).lower()
@@ -173,7 +181,7 @@ def handle_callback(call):
         result_text = f"{random.choice(male_first_names + female_first_names)} {random.choice(last_names)} {random.choice(emojis)}"
         markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_random'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
 
-    is_code_format = 'pass_' in call.data or call.data.startswith('auth_')
+    is_code_format = 'pass_' in call.data or call.data.startswith('user_')
     text = f'✨ *Result:*\n\n`{result_text}`' if is_code_format else f'✨ *Result:*\n\n{result_text}'
     bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
 
