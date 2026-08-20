@@ -18,16 +18,17 @@ female_first_names = ['Sadia', 'Anika', 'Tasfia', 'Noshin', 'Faria', 'Sumaiya', 
 last_names = ['Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder', 'Hasan', 'Sarker']
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
 
-# Mail.tm API Functions
+# FIXED: Mail.tm API Functions with correct Hydra parser
 def get_mail_tm_domain():
     try:
         res = requests.get("https://api.mail.tm/domains", timeout=10)
         if res.status_code == 200:
-            domains = res.json()
+            data = res.json()
+            domains = data.get('hydra:member', [])
             if domains:
                 return domains[0]['domain']
-    except:
-        pass
+    except Exception as e:
+        print(f"Domain Error: {e}")
     return None
 
 def create_mail_tm_account():
@@ -46,8 +47,8 @@ def create_mail_tm_account():
             if token_res.status_code == 200:
                 token = token_res.json().get('token')
                 return email, password, token
-    except:
-        pass
+    except Exception as e:
+        print(f"Account Creation Error: {e}")
     return None, None, None
 
 def get_mail_tm_messages(token):
@@ -55,7 +56,8 @@ def get_mail_tm_messages(token):
         headers = {"Authorization": f"Bearer {token}"}
         res = requests.get("https://api.mail.tm/messages", headers=headers, timeout=10)
         if res.status_code == 200:
-            return res.json()
+            data = res.json()
+            return data.get('hydra:member', [])
     except:
         pass
     return []
