@@ -9,41 +9,57 @@ API_TOKEN = '8994060740:AAFpgfuGajnOA-HLAmae5QmWaypDdRIR_aE'
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-first_names = [
-    'Aryan',
-    'Tanvir',
-    'Rahim',
-    'Sakib',
-    'Fahim',
-    'Nayeem',
-    'Sadia',
-    'Anika',
-    'Tasfia',
-    'Noshin',
-    'Rakib',
-    'Mehedi',
-    'Faria',
-    'Sumaiya',
-    'Mahin',
-    'Jannat',
-    'Sabbir',
-    'Ishrat',
-    'Arif',
-    'Shanto',
-    'Riya',
-    'Dipu',
-    'Muna',
-    'Farhan',
-    'Tisha',
-    'Rafsan',
-    'Mim',
-    'Niloy',
-    'Siam',
-    'Ratul',
-    'Priya',
-    'Joy',
-    'Hridoy',
+# Category-wise name lists
+male_names = [
+    'Aryan Ahmed',
+    'Tanvir Hossain',
+    'Rahim Chowdhury',
+    'Sakib Islam',
+    'Fahim Khan',
+    'Nayeem Rahman',
+    'Rakib Hasan',
+    'Mehedi Sarker',
+    'Mahin Biswas',
+    'Sabbir Karim',
+    'Arif Kabir',
+    'Shanto Das',
+    'Farhan Majumder',
+    'Niloy Miah',
+    'Siam Sheikh',
+    'Hridoy Bhuiyan',
 ]
+
+female_names = [
+    'Sadia Ahmed',
+    'Anika Hossain',
+    'Tasfia Chowdhury',
+    'Noshin Islam',
+    'Faria Khan',
+    'Sumaiya Rahman',
+    'Jannat Hasan',
+    'Ishrat Mondol',
+    'Riya Sarker',
+    'Muna Biswas',
+    'Tisha Deb',
+    'Mim Karim',
+    'Priya Das',
+    'Nusrat Barua',
+    'Mehzabien Haider',
+]
+
+stylish_names = [
+    '⚡ Shadow ⚡',
+    '🔥 Vortex 🔥',
+    '👑 King 👑',
+    '💀 Ghost 💀',
+    '💎 Diamond 💎',
+    '🌪️ Storm 🌪️',
+    '⚡ Flash ⚡',
+    '🔥 Blaze 🔥',
+    '❄️ Frost ❄️',
+    '🌙 Eclipse 🌙',
+]
+
 last_names = [
     'Ahmed',
     'Hossain',
@@ -55,53 +71,89 @@ last_names = [
     'Talukder',
     'Hasan',
     'Mondol',
-    'Sarker',
-    'Biswas',
-    'Deb',
-    'Karim',
-    'Kabir',
-    'Barua',
-    'Das',
-    'Majumder',
-    'Haider',
-    'Miah',
-    'Sheikh',
-    'Bhuiyan',
 ]
 
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-  markup = types.InlineKeyboardMarkup()
-  btn = types.InlineKeyboardButton(
-      '🎲 Generate Name', callback_data='generate_name'
+  # Modern Grid UI layout with 2 buttons per row
+  markup = types.InlineKeyboardMarkup(row_width=2)
+  btn_male = types.InlineKeyboardButton(
+      '👦 Boy Names', callback_data='gen_male'
   )
-  markup.add(btn)
+  btn_female = types.InlineKeyboardButton(
+      '👧 Girl Names', callback_data='gen_female'
+  )
+  btn_stylish = types.InlineKeyboardButton(
+      '😎 Stylish Names', callback_data='gen_stylish'
+  )
+  btn_random = types.InlineKeyboardButton(
+      '🎲 Random Name', callback_data='gen_random'
+  )
+  markup.add(btn_male, btn_female, btn_stylish, btn_random)
+
+  welcome_text = (
+      '🌟 *Welcome to Ultimate Name Generator Bot!*\n\nNicher option gulo'
+      ' theke apnar pochhonder category select korun:'
+  )
   bot.reply_to(
-      message,
-      'Welcome! Name Generator Bot-e apnake shagotom.\nNicher button-e click'
-      ' kore name generate korun:',
-      reply_markup=markup,
+      message, welcome_text, parse_mode='Markdown', reply_markup=markup
   )
 
 
-@bot.message_handler(commands=['generate'])
-def generate_name_msg(message):
-  send_generated_name(message.chat.id)
+def get_name_by_category(category):
+  if category == 'gen_male':
+    return random.choice(male_names)
+  elif category == 'gen_female':
+    return random.choice(female_names)
+  elif category == 'gen_stylish':
+    return random.choice(stylish_names)
+  else:
+    return f'{random.choice(["Aryan", "Sadia", "Tanvir", "Anika"])} {random.choice(last_names)}'
 
 
-def send_generated_name(chat_id, call=None):
-  name = f'{random.choice(first_names)} {random.choice(last_names)}'
-  # Code block (```) use korar fole tap korlei copy hoye jabe
-  text = f'Apnar generated name:\n`{name}`'
+@bot.callback_query_handler(
+    func=lambda call: call.data.startswith('gen_')
+    or call.data == 'main_menu'
+)
+def handle_callback(call):
+  if call.data == 'main_menu':
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    btn_male = types.InlineKeyboardButton(
+        '👦 Boy Names', callback_data='gen_male'
+    )
+    btn_female = types.InlineKeyboardButton(
+        '👧 Girl Names', callback_data='gen_female'
+    )
+    btn_stylish = types.InlineKeyboardButton(
+        '😎 Stylish Names', callback_data='gen_stylish'
+    )
+    btn_random = types.InlineKeyboardButton(
+        '🎲 Random Name', callback_data='gen_random'
+    )
+    markup.add(btn_male, btn_female, btn_stylish, btn_random)
 
-  markup = types.InlineKeyboardMarkup()
-  btn = types.InlineKeyboardButton(
-      '🔄 Another Name', callback_data='generate_name'
-  )
-  markup.add(btn)
+    bot.edit_message_text(
+        '🌟 *Main Menu*\n\nNicher option gulo theke category select korun:',
+        chat_id=call.message.chat.id,
+        message_id=call.message.id,
+        parse_mode='Markdown',
+        reply_markup=markup,
+    )
+  else:
+    name = get_name_by_category(call.data)
+    # Code block for easy tap-to-copy functionality
+    text = f'✨ *Generated Name:*\n\n`{name}`'
 
-  if call:
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    btn_again = types.InlineKeyboardButton(
+        '🔄 Generate Again', callback_data=call.data
+    )
+    btn_menu = types.InlineKeyboardButton(
+        '🏠 Main Menu', callback_data='main_menu'
+    )
+    markup.add(btn_again, btn_menu)
+
     bot.edit_message_text(
         text,
         chat_id=call.message.chat.id,
@@ -109,13 +161,6 @@ def send_generated_name(chat_id, call=None):
         parse_mode='Markdown',
         reply_markup=markup,
     )
-  else:
-    bot.send_message(chat_id, text, parse_mode='Markdown', reply_markup=markup)
-
-
-@bot.callback_query_handler(func=lambda call: call.data == 'generate_name')
-def callback_query(call):
-  send_generated_name(call.message.chat.id, call=call)
 
 
 @app.route('/')
