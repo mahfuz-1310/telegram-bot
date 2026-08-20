@@ -18,10 +18,15 @@ female_first_names = ['Sadia', 'Anika', 'Tasfia', 'Noshin', 'Faria', 'Sumaiya', 
 last_names = ['Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder', 'Hasan', 'Sarker']
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
 
-# FIXED: Mail.tm API Functions with correct Hydra parser
+# Mail.tm API Headers to prevent blocking
+MAIL_HEADERS = {
+    'Accept': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+}
+
 def get_mail_tm_domain():
     try:
-        res = requests.get("https://api.mail.tm/domains", timeout=10)
+        res = requests.get("https://api.mail.tm/domains", headers=MAIL_HEADERS, timeout=10)
         if res.status_code == 200:
             data = res.json()
             domains = data.get('hydra:member', [])
@@ -41,9 +46,9 @@ def create_mail_tm_account():
     password = "SecurePassword123!"
     
     try:
-        res = requests.post("https://api.mail.tm/accounts", json={"address": email, "password": password}, timeout=10)
+        res = requests.post("https://api.mail.tm/accounts", headers=MAIL_HEADERS, json={"address": email, "password": password}, timeout=10)
         if res.status_code in [200, 201]:
-            token_res = requests.post("https://api.mail.tm/token", json={"address": email, "password": password}, timeout=10)
+            token_res = requests.post("https://api.mail.tm/token", headers=MAIL_HEADERS, json={"address": email, "password": password}, timeout=10)
             if token_res.status_code == 200:
                 token = token_res.json().get('token')
                 return email, password, token
@@ -53,7 +58,8 @@ def create_mail_tm_account():
 
 def get_mail_tm_messages(token):
     try:
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = MAIL_HEADERS.copy()
+        headers["Authorization"] = f"Bearer {token}"
         res = requests.get("https://api.mail.tm/messages", headers=headers, timeout=10)
         if res.status_code == 200:
             data = res.json()
@@ -64,7 +70,8 @@ def get_mail_tm_messages(token):
 
 def read_mail_tm_message(token, msg_id):
     try:
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = MAIL_HEADERS.copy()
+        headers["Authorization"] = f"Bearer {token}"
         res = requests.get(f"https://api.mail.tm/messages/{msg_id}", headers=headers, timeout=10)
         if res.status_code == 200:
             return res.json()
