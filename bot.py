@@ -74,7 +74,6 @@ stylish_names = [
 
 
 def generate_username():
-  # Apnar chawa format onujayi (jemon: sakib_hussain199)
   f_name = random.choice(first_names).lower()
   l_name = random.choice(last_names).lower()
   number = random.randint(10, 999)
@@ -83,10 +82,6 @@ def generate_username():
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-  send_main_menu(message)
-
-
-def send_main_menu(message):
   markup = types.InlineKeyboardMarkup(row_width=2)
   btn_male = types.InlineKeyboardButton('👦 Boy', callback_data='gen_male')
   btn_female = types.InlineKeyboardButton('👧 Girl', callback_data='gen_female')
@@ -98,22 +93,35 @@ def send_main_menu(message):
   markup.add(btn_male, btn_female, btn_stylish, btn_random, btn_user)
 
   welcome_text = '🌟 *Ultimate Generator Bot*\n\nSelect a category:'
-  if hasattr(message, 'message_id'):
-    bot.edit_message_text(
-        welcome_text,
-        chat_id=message.chat.id,
-        message_id=message.message_id,
-        parse_mode='Markdown',
-        reply_markup=markup,
-    )
-  else:
-    bot.reply_to(message, welcome_text, parse_mode='Markdown', reply_markup=markup)
+  bot.reply_to(
+      message, welcome_text, parse_mode='Markdown', reply_markup=markup
+  )
 
 
 @bot.callback_query_handler(func=lambda call: True)
 def handle_callback(call):
   if call.data == 'main_menu':
-    send_main_menu(call.message)
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    btn_male = types.InlineKeyboardButton('👦 Boy', callback_data='gen_male')
+    btn_female = types.InlineKeyboardButton('👧 Girl', callback_data='gen_female')
+    btn_stylish = types.InlineKeyboardButton(
+        '😎 Stylish', callback_data='gen_stylish'
+    )
+    btn_random = types.InlineKeyboardButton(
+        '🎲 Random', callback_data='gen_random'
+    )
+    btn_user = types.InlineKeyboardButton(
+        '👤 Username', callback_data='gen_username'
+    )
+    markup.add(btn_male, btn_female, btn_stylish, btn_random, btn_user)
+
+    bot.edit_message_text(
+        '🌟 *Ultimate Generator Bot*\n\nSelect a category:',
+        chat_id=call.message.chat.id,
+        message_id=call.message.id,
+        parse_mode='Markdown',
+        reply_markup=markup,
+    )
     return
 
   if call.data == 'gen_username':
