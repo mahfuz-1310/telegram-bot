@@ -10,7 +10,7 @@ API_TOKEN = '8994060740:AAFpgfuGajnOA-HLAmae5QmWaypDdRIR_aE'
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-# Data Lists
+# Extended Data Lists
 male_first_names = [
     'Aryan',
     'Tanvir',
@@ -28,6 +28,20 @@ male_first_names = [
     'Niloy',
     'Siam',
     'Hridoy',
+    'Arman',
+    'Rashed',
+    'Jewel',
+    'Parvez',
+    'Imran',
+    'Shohag',
+    'Shuvo',
+    'Al-Amin',
+    'Rafsan',
+    'Ferdous',
+    'Asif',
+    'Bijoy',
+    'Monir',
+    'Zaber',
 ]
 female_first_names = [
     'Sadia',
@@ -44,6 +58,22 @@ female_first_names = [
     'Mim',
     'Priya',
     'Nusrat',
+    'Farhana',
+    'Tasnim',
+    'Bushra',
+    'Nadia',
+    'Sabrina',
+    'Farzana',
+    'Mehzabien',
+    'Puspita',
+    'Bristy',
+    'Lamia',
+    'Sneha',
+    'Tanha',
+    'Mahi',
+    'Oishee',
+    'Puja',
+    'Sanjida',
 ]
 last_names = [
     'Ahmed',
@@ -61,23 +91,18 @@ last_names = [
     'Karim',
     'Kabir',
     'Das',
+    'Majumder',
+    'Miah',
+    'Sheikh',
+    'Bhuiyan',
+    'Ali',
+    'Hawlader',
+    'Siddique',
 ]
-stylish_names = [
-    '⚡ Shadow ⚡',
-    '🔥 Vortex 🔥',
-    '👑 King 👑',
-    '💀 Ghost 💀',
-    '💎 Diamond 💎',
-    '🌪️ Storm 🌪️',
-    '⚡ Flash ⚡',
-    '🔥 Blaze 🔥',
-    '❄️ Frost ❄️',
-    '🌙 Eclipse 🌙',
-]
-emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎', '🔥']
+emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
 
 
-# Username Generator Function
+# Username Generator Function (No emoji)
 def generate_username(gender):
   if gender == 'male':
     f_name = random.choice(male_first_names).lower()
@@ -86,7 +111,7 @@ def generate_username(gender):
 
   l_name = random.choice(last_names).lower()
   number = random.randint(10, 999)
-  return f'{f_name}_{l_name}{number} {random.choice(emojis)}'
+  return f'{f_name}_{l_name}{number}'
 
 
 # Password Generator Function with Length up to 45
@@ -390,7 +415,23 @@ def handle_callback(call):
     )
 
   elif call.data == 'gen_stylish':
-    name = f'{random.choice(stylish_names)} {random.choice(emojis)}'
+    all_firsts = male_first_names + female_first_names
+    f_name = random.choice(all_firsts).lower()
+    l_name = random.choice(last_names).lower()
+
+    # Real human name with stylish symbols and emojis (e.g. rakib talukder 😎⚡)
+    stylish_styles = [
+        f'{f_name} {l_name} 😎⚡',
+        f'{f_name} {l_name} !¡ 🚩',
+        f'{f_name} {l_name} 🖤✨',
+        f'{f_name} {l_name} ⚡🔥',
+        f'{f_name} {l_name} 🍁🥀',
+        f'{f_name} {l_name} 👑💫',
+        f'{f_name} {l_name} 💯🔥',
+        f'{f_name} {l_name} ☠️⚡',
+    ]
+    name = random.choice(stylish_styles)
+
     markup.add(
         types.InlineKeyboardButton(
             '🔄 Generate Again', callback_data='gen_stylish'
