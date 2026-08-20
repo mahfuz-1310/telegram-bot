@@ -12,9 +12,11 @@ API_TOKEN = '8994060740:AAFpgfuGajnOA-HLAmae5QmWaypDdRIR_aE'
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return "Mail.tm Bot is running live!"
+# Data Lists for Names and Passwords
+male_first_names = ['Aryan', 'Tanvir', 'Rahim', 'Sakib', 'Fahim', 'Nayeem', 'Rakib', 'Mehedi', 'Mahin', 'Sabbir', 'Arif', 'Shanto']
+female_first_names = ['Sadia', 'Anika', 'Tasfia', 'Noshin', 'Faria', 'Sumaiya', 'Jannat', 'Ishrat', 'Riya', 'Muna', 'Tisha', 'Mim']
+last_names = ['Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder', 'Hasan', 'Sarker']
+emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
 
 # Mail.tm API Functions
 def get_mail_tm_domain():
@@ -38,10 +40,8 @@ def create_mail_tm_account():
     password = "SecurePassword123!"
     
     try:
-        # Create Account
         res = requests.post("https://api.mail.tm/accounts", json={"address": email, "password": password}, timeout=10)
         if res.status_code in [200, 201]:
-            # Get Token
             token_res = requests.post("https://api.mail.tm/token", json={"address": email, "password": password}, timeout=10)
             if token_res.status_code == 200:
                 token = token_res.json().get('token')
@@ -77,17 +77,50 @@ def extract_otp_code(body):
     num_match = re.search(r'\b\d{4,6}\b', body)
     return num_match.group(0) if num_match else None
 
+def apply_unicode_font(text, style):
+    emj = random.choice(emojis)
+    res = ''
+    for c in text:
+        o = ord(c)
+        if style == 'bold_sans':
+            if 65 <= o <= 90: res += chr(120276 + (o - 65))
+            elif 97 <= o <= 122: res += chr(120302 + (o - 97))
+            else: res += c
+        elif style == 'italic':
+            if 65 <= o <= 90: res += chr(119808 + (o - 65))
+            elif 97 <= o <= 122: res += chr(119834 + (o - 97))
+            else: res += c
+        elif style == 'mono':
+            if 65 <= o <= 90: res += chr(120432 + (o - 65))
+            elif 97 <= o <= 122: res += chr(120458 + (o - 97))
+            else: res += c
+        elif style == 'circled':
+            if 65 <= o <= 90: res += chr(9398 + (o - 65))
+            elif 97 <= o <= 122: res += chr(9424 + (o - 97))
+            else: res += c
+        else: res += c
+    return f"{res} {emj}"
+
+@app.route('/')
+def home():
+    return "Bot is running live!"
+
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     send_main_menu(message)
 
 def send_main_menu(message_or_call):
-    markup = types.InlineKeyboardMarkup(row_width=1)
-    markup.add(
-        types.InlineKeyboardButton('📧 Generate Mail.tm Email', callback_data='gen_mailtm'),
-        types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu')
-    )
-    text = '🌟 *Mail.tm Temp Mail Bot*\n\nClick below to generate a working temporary email:'
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    btn_male = types.InlineKeyboardButton('👦 Boy Name', callback_data='boy_font_menu')
+    btn_female = types.InlineKeyboardButton('👧 Girl Name', callback_data='girl_font_menu')
+    btn_stylish = types.InlineKeyboardButton('😎 Stylish Name', callback_data='gen_stylish')
+    btn_random = types.InlineKeyboardButton('🎲 Random Name', callback_data='gen_random')
+    btn_user = types.InlineKeyboardButton('👤 Username', callback_data='username_menu')
+    btn_pass = types.InlineKeyboardButton('🔑 Password', callback_data='password_menu')
+    btn_mail = types.InlineKeyboardButton('📧 Mail.tm Temp Mail', callback_data='gen_mailtm')
+    
+    markup.add(btn_male, btn_female, btn_stylish, btn_random, btn_user, btn_pass, btn_mail)
+    text = '🌟 *Ultimate Generator Bot*\n\nSelect a category:'
     
     if isinstance(message_or_call, types.Message):
         bot.reply_to(message_or_call, text, parse_mode='Markdown', reply_markup=markup)
@@ -100,6 +133,7 @@ def handle_callback(call):
         send_main_menu(call)
         return
 
+    # Mail.tm Handlers
     if call.data == 'gen_mailtm':
         email, password, token = create_mail_tm_account()
         if not email:
@@ -108,7 +142,6 @@ def handle_callback(call):
         
         text = f'📧 *Generated Mail:*\n\n`{email}`\n\n📥 *Inbox check korte nicher button-e click korun:*'
         markup = types.InlineKeyboardMarkup(row_width=1)
-        # Storing token securely in callback data or use alternative mapping (passing token in callback for simplicity)
         markup.add(
             types.InlineKeyboardButton('📥 Inbox Check', callback_data=f'inbox_{token}_{email}'),
             types.InlineKeyboardButton('🔄 New Mail', callback_data='gen_mailtm'),
@@ -179,6 +212,88 @@ def handle_callback(call):
             text = '❌ Failed to fetch.'
         bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
         return
+
+    # Name and Pass Menu Handlers
+    if call.data == 'boy_font_menu':
+        markup = types.InlineKeyboardMarkup(row_width=2)
+        markup.add(
+            types.InlineKeyboardButton('𝗔-𝗭 Bold Sans', callback_data='boy_bold_sans'),
+            types.InlineKeyboardButton('𝐴-𝑍 Italic', callback_data='boy_italic'),
+            types.InlineKeyboardButton('𝙰-𝚣 Monospace', callback_data='boy_mono'),
+            types.InlineKeyboardButton('Ⓐ-Ⓩ Circled', callback_data='boy_circled'),
+            types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
+        )
+        bot.edit_message_text('👦 *Select Boy Font Style:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+        return
+
+    if call.data == 'girl_font_menu':
+        markup = types.InlineKeyboardMarkup(row_width=2)
+        markup.add(
+            types.InlineKeyboardButton('𝗔-𝗭 Bold Sans', callback_data='girl_bold_sans'),
+            types.InlineKeyboardButton('𝐴-𝑍 Italic', callback_data='girl_italic'),
+            types.InlineKeyboardButton('𝙰-𝚣 Monospace', callback_data='girl_mono'),
+            types.InlineKeyboardButton('Ⓐ-Ⓩ Circled', callback_data='girl_circled'),
+            types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
+        )
+        bot.edit_message_text('👧 *Select Girl Font Style:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+        return
+
+    if call.data == 'username_menu':
+        markup = types.InlineKeyboardMarkup(row_width=2)
+        markup.add(
+            types.InlineKeyboardButton('👦 Boy Username', callback_data='gen_user_male'),
+            types.InlineKeyboardButton('👧 Girl Username', callback_data='gen_user_female'),
+            types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
+        )
+        bot.edit_message_text('👤 *Select Username Gender:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+        return
+
+    if call.data == 'password_menu':
+        markup = types.InlineKeyboardMarkup(row_width=2)
+        markup.add(
+            types.InlineKeyboardButton('🔒 8 Digits', callback_data='pass_8'),
+            types.InlineKeyboardButton('🔒 12 Digits', callback_data='pass_12'),
+            types.InlineKeyboardButton('🔒 16 Digits', callback_data='pass_16'),
+            types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
+        )
+        bot.edit_message_text('🔑 *Select Password Length:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+        return
+
+    # Generators Output Logic
+    name = ''
+    markup = types.InlineKeyboardMarkup(row_width=2)
+
+    if call.data.startswith('boy_'):
+        style = call.data.replace('boy_', '')
+        raw_name = f"{random.choice(male_first_names)} {random.choice(last_names)}"
+        name = apply_unicode_font(raw_name, style)
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='boy_font_menu'))
+    elif call.data.startswith('girl_'):
+        style = call.data.replace('girl_', '')
+        raw_name = f"{random.choice(female_first_names)} {random.choice(last_names)}"
+        name = apply_unicode_font(raw_name, style)
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='girl_font_menu'))
+    elif call.data == 'gen_user_male':
+        name = f"{random.choice(male_first_names).lower()}_{random.choice(last_names).lower()}{random.randint(10,999)}"
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_user_male'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
+    elif call.data == 'gen_user_female':
+        name = f"{random.choice(female_first_names).lower()}_{random.choice(last_names).lower()}{random.randint(10,999)}"
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_user_female'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
+    elif call.data.startswith('pass_'):
+        length = int(call.data.replace('pass_', ''))
+        name = ''.join(random.choices(string.ascii_letters + string.digits + '@#$%!', k=length))
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='password_menu'))
+    elif call.data == 'gen_stylish':
+        f_name = random.choice(male_first_names + female_first_names).lower()
+        l_name = random.choice(last_names).lower()
+        name = f"{f_name} {l_name} 😎⚡"
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_stylish'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
+    elif call.data == 'gen_random':
+        name = f"{random.choice(male_first_names + female_first_names)} {random.choice(last_names)} {random.choice(emojis)}"
+        markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_random'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
+
+    text = f'✨ *Result:*\n\n`{name}`' if 'pass_' in call.data or 'user_' in call.data else f'✨ *Result:*\n\n{name}'
+    bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
 
 def run_bot():
     try:
