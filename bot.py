@@ -17,65 +17,38 @@ male_first_names = ['Aryan', 'Tanvir', 'Rahim', 'Sakib', 'Fahim', 'Nayeem', 'Rak
 female_first_names = ['Sadia', 'Anika', 'Tasfia', 'Noshin', 'Faria', 'Sumaiya', 'Jannat', 'Ishrat', 'Riya', 'Muna', 'Tisha', 'Mim']
 last_names = ['Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder', 'Hasan', 'Sarker']
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
+mail_words1 = ['grey', 'dark', 'cool', 'swift', 'frost', 'shadow', 'neon', 'iron', 'alpha']
+mail_words2 = ['savage', 'knight', 'coder', 'gamer', 'wolf', 'dragon', 'storm', 'ninja']
+mail_words3 = ['cedc', 'pro', 'x', 'zen', 'bot', 'hub', 'net', 'sec']
 
-# Mail.tm API Headers to prevent blocking
-MAIL_HEADERS = {
-    'Accept': 'application/json',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-}
+def generate_temp_mail():
+    w1 = random.choice(mail_words1)
+    w2 = random.choice(mail_words2)
+    w3 = random.choice(mail_words3)
+    username = f"{w1}{w2}{w3}{random.randint(10,999)}"
+    display_domain = random.choice(['hotmail.com', 'outlook.com', 'gmail.com'])
+    real_domain = '1secmail.com'
+    return f"{username}@{display_domain}", f"{username}@{real_domain}"
 
-def get_mail_tm_domain():
+def check_inbox_messages(real_email):
     try:
-        res = requests.get("https://api.mail.tm/domains", headers=MAIL_HEADERS, timeout=10)
-        if res.status_code == 200:
-            data = res.json()
-            domains = data.get('hydra:member', [])
-            if domains:
-                return domains[0]['domain']
-    except Exception as e:
-        print(f"Domain Error: {e}")
-    return None
-
-def create_mail_tm_account():
-    domain = get_mail_tm_domain()
-    if not domain:
-        return None, None, None
-    
-    username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
-    email = f"{username}@{domain}"
-    password = "SecurePassword123!"
-    
-    try:
-        res = requests.post("https://api.mail.tm/accounts", headers=MAIL_HEADERS, json={"address": email, "password": password}, timeout=10)
-        if res.status_code in [200, 201]:
-            token_res = requests.post("https://api.mail.tm/token", headers=MAIL_HEADERS, json={"address": email, "password": password}, timeout=10)
-            if token_res.status_code == 200:
-                token = token_res.json().get('token')
-                return email, password, token
-    except Exception as e:
-        print(f"Account Creation Error: {e}")
-    return None, None, None
-
-def get_mail_tm_messages(token):
-    try:
-        headers = MAIL_HEADERS.copy()
-        headers["Authorization"] = f"Bearer {token}"
-        res = requests.get("https://api.mail.tm/messages", headers=headers, timeout=10)
-        if res.status_code == 200:
-            data = res.json()
-            return data.get('hydra:member', [])
-    except:
+        login, domain = real_email.split('@')
+        url = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            return response.json()
+    except: 
         pass
     return []
 
-def read_mail_tm_message(token, msg_id):
+def read_mail_content(real_email, msg_id):
     try:
-        headers = MAIL_HEADERS.copy()
-        headers["Authorization"] = f"Bearer {token}"
-        res = requests.get(f"https://api.mail.tm/messages/{msg_id}", headers=headers, timeout=10)
-        if res.status_code == 200:
-            return res.json()
-    except:
+        login, domain = real_email.split('@')
+        url = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={msg_id}"
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            return response.json()
+    except: 
         pass
     return None
 
@@ -126,7 +99,7 @@ def send_main_menu(message_or_call):
     btn_random = types.InlineKeyboardButton('🎲 Random Name', callback_data='gen_random')
     btn_user = types.InlineKeyboardButton('👤 Username', callback_data='username_menu')
     btn_pass = types.InlineKeyboardButton('🔑 Password', callback_data='password_menu')
-    btn_mail = types.InlineKeyboardButton('📧 Mail.tm Temp Mail', callback_data='gen_mailtm')
+    btn_mail = types.InlineKeyboardButton('📧 Temp Mail', callback_data='gen_temp_mail')
     
     markup.add(btn_male, btn_female, btn_stylish, btn_random, btn_user, btn_pass, btn_mail)
     text = '🌟 *Ultimate Generator Bot*\n\nSelect a category:'
@@ -142,36 +115,32 @@ def handle_callback(call):
         send_main_menu(call)
         return
 
-    # Mail.tm Handlers
-    if call.data == 'gen_mailtm':
-        email, password, token = create_mail_tm_account()
-        if not email:
-            bot.answer_callback_query(call.id, "Failed to create mail. Try again!")
-            return
-        
-        text = f'📧 *Generated Mail:*\n\n`{email}`\n\n📥 *Inbox check korte nicher button-e click korun:*'
+    # Temp Mail Handlers
+    if call.data == 'gen_temp_mail':
+        display_mail, real_mail = generate_temp_mail()
+        text = f'📧 *Generated Mail:*\n\n`{display_mail}`\n\n📥 *Inbox check korte nicher button-e click korun:*'
         markup = types.InlineKeyboardMarkup(row_width=1)
         markup.add(
-            types.InlineKeyboardButton('📥 Inbox Check', callback_data=f'inbox_{token}_{email}'),
-            types.InlineKeyboardButton('🔄 New Mail', callback_data='gen_mailtm'),
+            types.InlineKeyboardButton('📥 Inbox Check', callback_data=f'inbox_{real_mail}'),
+            types.InlineKeyboardButton('🔄 New Mail', callback_data='gen_temp_mail'),
             types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu')
         )
         bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
         return
 
     if call.data.startswith('inbox_'):
-        parts = call.data.split('_', 2)
-        token = parts[1]
-        email = parts[2]
+        real_email = call.data.replace('inbox_', '')
+        username = real_email.split('@')[0]
+        display_email = f"{username}@hotmail.com"
         
-        messages = get_mail_tm_messages(token)
-        text = f'📧 *Email:* `{email}`\n\n'
+        messages = check_inbox_messages(real_email)
+        text = f'📧 *Email:* `{display_email}`\n\n'
         markup = types.InlineKeyboardMarkup(row_width=1)
 
         if messages:
             text += f'📥 *Inbox-e {len(messages)} টি মেসেজ পাওয়া গেছে:*'
             for msg in messages:
-                markup.add(types.InlineKeyboardButton(f'📩 {msg.get("subject", "No Subject")[:20]}', callback_data=f'read_{token}_{msg.get("id")}_{email}'))
+                markup.add(types.InlineKeyboardButton(f'📩 {msg.get("subject", "No Subject")[:20]}', callback_data=f'read_{real_email}_{msg.get("id")}'))
         else:
             text += '📭 *Inbox is empty! (Waiting for messages)*'
         
@@ -183,38 +152,34 @@ def handle_callback(call):
         return
 
     if call.data.startswith('read_'):
-        parts = call.data.split('_', 3)
-        token = parts[1]
-        msg_id = parts[2]
-        email = parts[3]
+        parts = call.data.split('_', 2)
+        real_email, msg_id = parts[1], parts[2]
         
-        msg_data = read_mail_tm_message(token, msg_id)
+        msg_data = read_mail_content(real_email, msg_id)
         markup = types.InlineKeyboardMarkup(row_width=1)
         if msg_data:
-            sender = msg_data.get('from', {}).get('address', 'Unknown')
+            sender = msg_data.get('from', 'Unknown')
             subject = msg_data.get('subject', 'No Subject')
-            body = msg_data.get('text', 'No text content available.')
+            body = msg_data.get('textBody', 'No text content available.')
             text = f'📩 *From:* `{sender}`\n📌 *Subject:* `{subject}`\n\n💬 *Body:*\n`{body[:400]}`'
-            markup.add(types.InlineKeyboardButton('🔑 Get Code', callback_data=f'code_{token}_{msg_id}_{email}'))
+            markup.add(types.InlineKeyboardButton('🔑 Get Code', callback_data=f'code_{real_email}_{msg_id}'))
         else:
             text = '❌ Message read failed.'
-        markup.add(types.InlineKeyboardButton('🔙 Back to Inbox', callback_data=f'inbox_{token}_{email}'))
+        markup.add(types.InlineKeyboardButton('🔙 Back to Inbox', callback_data=f'inbox_{real_email}'))
         
         bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
         return
 
     if call.data.startswith('code_'):
-        parts = call.data.split('_', 3)
-        token = parts[1]
-        msg_id = parts[2]
-        email = parts[3]
+        parts = call.data.split('_', 2)
+        real_email, msg_id = parts[1], parts[2]
         
-        msg_data = read_mail_tm_message(token, msg_id)
+        msg_data = read_mail_content(real_email, msg_id)
         markup = types.InlineKeyboardMarkup(row_width=1)
-        markup.add(types.InlineKeyboardButton('🔙 Back to Message', callback_data=f'read_{token}_{msg_id}_{email}'))
+        markup.add(types.InlineKeyboardButton('🔙 Back to Message', callback_data=f'read_{real_email}_{msg_id}'))
         
         if msg_data:
-            body = msg_data.get('text', '')
+            body = msg_data.get('textBody', '')
             otp = extract_otp_code(body)
             text = f'🔑 *Verification Code:* `{otp}`' if otp else '⚠️ *Code paowa jayni!*'
         else:
