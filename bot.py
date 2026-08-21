@@ -140,12 +140,11 @@ def handle_callback(call):
             types.InlineKeyboardButton('🔒 20 Digits', callback_data='pass_20'),
             types.InlineKeyboardButton('🔒 24 Digits', callback_data='pass_24'),
             types.InlineKeyboardButton('🔒 32 Digits', callback_data='pass_32'),
-            types.InlineKeyboardButton('📦 10 Passwords', callback_data='pass_bulk_10'),
-            types.InlineKeyboardButton('📦 25 Passwords', callback_data='pass_bulk_25'),
-            types.InlineKeyboardButton('📦 50 Passwords', callback_data='pass_bulk_50'),
+            types.InlineKeyboardButton('🔒 40 Digits', callback_data='pass_40'),
+            types.InlineKeyboardButton('🔒 50 Digits', callback_data='pass_50'),
             types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
         )
-        bot.edit_message_text('🔑 *Select Password Option:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+        bot.edit_message_text('🔑 *Select Password Length:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
         return
 
     # Generators Output Logic
@@ -175,16 +174,8 @@ def handle_callback(call):
         result_text = f"{random.choice(cool_words).lower()}{random.choice(last_names).lower()}{random.randint(1000,9999)}"
         markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_random'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
     elif call.data.startswith('pass_'):
-        if call.data.startswith('pass_bulk_'):
-            count = int(call.data.replace('pass_bulk_', ''))
-            pass_list = []
-            for _ in range(count):
-                pwd = ''.join(random.choices(string.ascii_letters + string.digits + '@#$%!', k=12))
-                pass_list.append(pwd)
-            result_text = '\n'.join(pass_list)
-        else:
-            length = int(call.data.replace('pass_', ''))
-            result_text = ''.join(random.choices(string.ascii_letters + string.digits + '@#$%!', k=length))
+        length = int(call.data.replace('pass_', ''))
+        result_text = ''.join(random.choices(string.ascii_letters + string.digits + '@#$%!', k=length))
         markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='password_menu'))
     elif call.data == 'gen_stylish':
         f_name = random.choice(male_first_names + female_first_names).lower()
