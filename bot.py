@@ -92,8 +92,8 @@ female_nicknames_list = [
     "⚡ ꜰᴀʀɪᴀ ɪꜱʜʀᴀᴛ ⚡", "😎 ꜱᴜᴍᴀɪʏᴀ ᴀᴋᴛʜᴇʀ 😎", "💫 ᴊᴀɴɴᴀᴛᴜʟ ꜰᴇʀᴅᴏᴜꜱ 💫", "🌟 ᴀʀɪꜰᴀ ᴋʜᴀᴛᴜɴ 🌟",
     "🌟 ʀɪʏᴀ ᴍᴏɴɪ 🌟", "🔥 ᴍᴜɴᴀ ᴀᴋᴛʜᴇʀ 🔥", "👑 ᴛɪꜱʜᴀ ᴍᴏɴɪ 👑", "⚡ ᴍɪᴍ ᴀᴋᴛʜᴇʀ ⚡",
     "😎 ɴᴜꜱʀᴀᴛ ᴊᴀʜᴀɴ 😎", "💫 ꜱᴀʙʀɪɴᴀ ʏᴀꜱᴍɪɴ 💫", "🌟 ꜰᴀʀᴢᴀɴᴀ ʙᴇɢᴜᴍ 🌟", "🔥 ʟᴀᴍɪᴀ ɪꜱʟᴀᴍ 🔥",
-    "👑 ᴍᴀʟɪʜᴀ ᴛᴀʙᴀꜱꜱᴜᴍ 👑", "⚡ ᴢᴇʀɪɴ ᴛᴀꜱɴɪᴍ ⚡", "😎 ᴘʀɪʏ🇦 ʀᴀʏ 😎", "💫 ꜱᴀɴᴊɪᴅᴀ ɪꜱʟᴀᴍ 💫",
-    "🌟 ᴍɪᴛᴜ ᴀᴋᴛʜᴇʀ 🌟", "🔥 ʙʀɪꜱᴛʏ ʀᴀʜᴍᴀɴ 🔥", "👑 ɴɪʟᴀ ᴄʜᴏᴡᴅʜᴜʀʏ 👑", "⚡ ᴛᴀɴɪ🇦 ɪꜱʟᴀᴍ ⚡"
+    "👑 ᴍᴀʟɪʜᴀ ᴛᴀʙᴀꜱꜱᴜᴍ 👑", "⚡ ᴢᴇʀɪɴ ᴛᴀꜱɴɪᴍ ⚡", "😎 ᴘʀɪʏᴀ ʀᴀʏ 😎", "💫 ꜱᴀɴᴊɪᴅᴀ ɪꜱʟᴀᴍ 💫",
+    "🌟 ᴍɪᴛᴜ ᴀᴋᴛʜᴇʀ 🌟", "🔥 ʙʀɪꜱᴛʏ ʀᴀʜᴍᴀɴ 🔥", "👑 ɴɪʟᴀ ᴄʜᴏᴡᴅʜᴜʀʏ 👑", "⚡ ᴛᴀɴɪᴀ ɪꜱʟᴀᴍ ⚡"
 ]
 
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
@@ -283,9 +283,9 @@ def handle_callback(call):
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_random'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
 
         if call.data in ['gen_toss', 'gen_coin_flip']:
-            text = f'✨ *Result:*\n\n{result_text}'
+            text = f'✨ *Result:*\n\n{result_text}\n\n👨‍💻 *Developer:* Mahfuz'
         else:
-            text = f'✨ *Result:*\n\n`{result_text}`'
+            text = f'✨ *Result:*\n\n`{result_text}`\n\n👨‍💻 *Developer:* Mahfuz'
         
         try:
             bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
