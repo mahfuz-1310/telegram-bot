@@ -10,69 +10,75 @@ API_TOKEN = '8994060740:AAFpgfuGajnOA-HLAmae5QmWaypDdRIR_aE'
 bot = telebot.TeleBot(API_TOKEN, threaded=True)
 app = Flask(__name__)
 
-# Expanded Data Lists for Names and Passwords
+# Massively Expanded Data Lists
 male_first_names = [
     'Aryan', 'Tanvir', 'Rahim', 'Sakib', 'Fahim', 'Nayeem', 'Rakib', 'Mehedi', 'Mahin', 'Sabbir', 'Arif', 'Shanto',
     'Imran', 'Tanim', 'Jahid', 'Raihan', 'Faysal', 'Nabil', 'Shihab', 'Ashik', 'Tariq', 'Sohan', 'Rokon', 'Nayem',
     'Arman', 'Rassel', 'Biplob', 'Shohan', 'Parvez', 'Rifat', 'Siam', 'Zihad', 'Al Amin', 'Touhid', 'Rahat',
     'Nafees', 'Adnan', 'Tamim', 'Mashrafe', 'Shakil', 'Sazzad', 'Joy', 'Nibir', 'Fahad', 'Ridoy', 'Alvi', 'Monir',
-    'Sujon', 'Ripon', 'Shahed', 'Firoz', 'Masum', 'Belal', 'Sumon', 'Rashed', 'Nazmul', 'Mamun', 'Litón', 'Sohel'
+    'Sujon', 'Ripon', 'Shahed', 'Firoz', 'Masum', 'Belal', 'Sumon', 'Rashed', 'Nazmul', 'Mamun', 'Litón', 'Sohel',
+    'Shafiq', 'Farhan', 'Zubayer', 'Mahbub', 'Anik', 'Tushar', 'Raiyan', 'Ayman', 'Mushfiq', 'Mustafiz', 'Proloy',
+    'Akash', 'Niloy', 'Joyanta', 'Protap', 'Bappy', 'Rony', 'Rubel', 'Jewel', 'Suvro', 'Dipu', 'Milon',
+    'Juel', 'Moin', 'Emon', 'Hridoy', 'Pias', 'Plabon', 'Shuvo', 'Bijoy', 'Sajib', 'Tuhin', 'Rana',
+    'Zayed', 'Shoaib', 'Fardeen', 'Nafis', 'Abrar', 'Wafi', 'Zayn', 'Rayyan', 'Ahnaf', 'Mahtab',
+    'Saad', 'Rakin', 'Tasin', 'Samin', 'Shafin', 'Zafir', 'Azwad', 'Ishan', 'Arham', 'Ayyan', 'Zuhair', 'Rayaan'
 ]
 
 female_first_names = [
     'Sadia', 'Anika', 'Tasfia', 'Noshin', 'Faria', 'Sumaiya', 'Jannat', 'Ishrat', 'Riya', 'Muna', 'Tisha', 'Mim',
     'Nusrat', 'Sabrina', 'Mehnaz', 'Farzana', 'Tabassum', 'Tanzina', 'Lamia', 'Maliha', 'Zerin', 'Priya', 'Puja',
     'Farhin', 'Bushra', 'Sanjida', 'Mitu', 'Bristy', 'Nila', 'Tania', 'Sharmin', 'Jerin', 'Fariha', 'Sneha', 'Meem',
-    'Nadia', 'Prova', 'Mehjabin', 'Puspita', 'Mou', 'Swarna', 'Sneha', 'Trisha', 'Rumu', 'Porshi', 'Mouri', 'Mimia',
-    'Afsana', 'Farha', 'Tania', 'Sultana', 'Jesmin', 'Roksana', 'Shorna', 'Tonima', 'Laboni', 'Nipa', 'Bristy'
+    'Nadia', 'Prova', 'Mehjabin', 'Puspita', 'Mou', 'Swarna', 'Trisha', 'Rumu', 'Porshi', 'Mouri', 'Mimia',
+    'Afsana', 'Farha', 'Sultana', 'Jesmin', 'Roksana', 'Shorna', 'Tonima', 'Laboni', 'Nipa', 'Mahia', 'Mehezabin',
+    'Tasnim', 'Fiza', 'Ayesha', 'Fatima', 'Khadija', 'Zunaira', 'Madiha', 'Raisa', 'Afifa', 'Ahona', 'Orpi',
+    'Mehek', 'Jinia', 'Tanni', 'Popy', 'Bristi', 'Sraboni', 'Mahi', 'Antra', 'Simran', 'Ritu', 'Nitu', 'Subah',
+    'Zoya', 'Zara', 'Areej', 'Inaya', 'Ayra', 'Aliza', 'Rania', 'Safiya', 'Hafsa', 'Maryam', 'Saba',
+    'Dania', 'Liza', 'Mehvish', 'Anaya', 'Eshal', 'Hoorain', 'Rabeya', 'Tasneem', 'Warda', 'Zunairah', 'Abeer'
 ]
 
 last_names = [
     'Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder', 'Hasan', 'Sarker',
     'Ali', 'Mollah', 'Bhuiyan', 'Mazumder', 'Siddique', 'Karim', 'Talukdar', 'Mia', 'Biswas', 'Roy',
     'Akther', 'Begum', 'Khatun', 'Dewan', 'Miah', 'Sheikh', 'Bhowmick', 'Sen', 'Das', 'Munshi',
-    'Shikder', 'Sarder', 'Pramanik', 'Vhowmick', 'Barua', 'Chakma', 'Golder', 'Hajra', 'Kundu', 'Nag'
+    'Shikder', 'Sarder', 'Pramanik', 'Vhowmick', 'Barua', 'Chakma', 'Golder', 'Hajra', 'Kundu', 'Nag',
+    'Saha', 'Datta', 'Pal', 'De', 'Nath', 'Ghosh', 'Banerjee', 'Chatterjee', 'Mukherjee', 'Dhar',
+    'Sultana', 'Chakraborty', 'Bhattacharya', 'Ganguly', 'Paul', 'Barman', 'Sarkar', 'Malakar'
 ]
 
-gamer_tags = ['Shadow', 'Viper', 'Ghost', 'Sniper', 'Ninja', 'Cyber', 'Nexus', 'Blaze', 'Storm', 'Titan', 'Apex', 'Phantom']
-cool_words = ['Alpha', 'Beta', 'Zero', 'Dark', 'Swift', 'Prime', 'Elite', 'Legend', 'Savage', 'Cyborg']
+gamer_tags = ['Shadow', 'Viper', 'Ghost', 'Sniper', 'Ninja', 'Cyber', 'Nexus', 'Blaze', 'Storm', 'Titan', 'Apex', 'Phantom', 'Zero', 'Rogue', 'Venom', 'Spectre']
+cool_words = ['Alpha', 'Beta', 'Zero', 'Dark', 'Swift', 'Prime', 'Elite', 'Legend', 'Savage', 'Cyborg', 'Rebel', 'Ghost', 'Titan', 'Neon']
 
 bios_list = [
-    "👑 King of my own world ✨",
-    "🚀 Too glam to give a damn 😎",
-    "🔥 Living life on my own terms 💯",
-    "🤫 Silent killer in the game ⚡",
-    "💫 Born to express, not to impress 🎯",
-    "🌟 Dream big, work hard, stay humble 🙏",
-    "💎 Reality is wrong, dreams are for real 🌙",
-    "⚡ Attitude is my default setting 🔥",
-    "😎 Don't study me, you won't graduate 📚",
-    "🔥 Catch flights, not feelings ✈️",
-    "👑 Work hard in silence, let success make the noise 🤫",
-    "✨ Be a warrior, not a worrier ⚔️",
-    "🚀 Stay low-key, let them assume 🕶️",
-    "💫 Master of my own fate 🎲",
-    "🌟 Silence is the best response to a fool 🦉",
-    "🔥 Born to rule, forced to school 🎒",
-    "💎 Classy, sassy, and a bit smart-assy 😎",
-    "⚡ Keep your heels, head, and standards high 👠",
-    "👑 Loyalty is rare, if you find it, keep it 🤝",
-    "🚀 Risk taker, rule breaker 🌪️",
-    "🔥 Haters gonna hate, but I accelerate 🏎️",
-    "💫 Not arrogant, just better 👑",
-    "🌟 Creating my own sunshine ☀️",
-    "⚡ Focused, determined, unstoppable 🎯"
+    "👑 King of my own world ✨", "🚀 Too glam to give a damn 😎", "🔥 Living life on my own terms 💯",
+    "🤫 Silent killer in the game ⚡", "💫 Born to express, not to impress 🎯", "🌟 Dream big, work hard, stay humble 🙏",
+    "💎 Reality is wrong, dreams are for real 🌙", "⚡ Attitude is my default setting 🔥", "😎 Don't study me, you won't graduate 📚",
+    "🔥 Catch flights, not feelings ✈️", "👑 Work hard in silence, let success make the noise 🤫", "✨ Be a warrior, not a worrier ⚔️",
+    "🚀 Stay low-key, let them assume 🕶️", "💫 Master of my own fate 🎲", "🌟 Silence is the best response to a fool 🦉",
+    "🔥 Born to rule, forced to school 🎒", "💎 Classy, sassy, and a bit smart-assy 😎", "⚡ Keep your heels, head, and standards high 👠",
+    "👑 Loyalty is rare, if you find it, keep it 🤝", "🚀 Risk taker, rule breaker 🌪️", "🔥 Haters gonna hate, but I accelerate 🏎️",
+    "💫 Not arrogant, just better 👑", "🌟 Creating my own sunshine ☀️", "⚡ Focused, determined, unstoppable 🎯",
+    "🔥 Smart, strong, and slightly dangerous 🖤", "👑 Silence speaks when words can't 🥀", "💫 Reality leaves a lot to the imagination 🌌",
+    "🌟 Do what you love, love what you do ❤️", "⚡ Born to stand out, not to fit in 🌠", "🔥 Hustle hard in silence 💼",
+    "👑 Legends never die, they multiply ⚡", "😎 Born to win, forced to work 💯", "🚀 Sky is not the limit, my mind is 🌌",
+    "💫 Peace of mind over everything 🕊️", "🔥 Confidence is silent, insecurities are loud 🦁", "👑 Make it happen, shock everyone ⚡",
+    "✨ Normal is an illusion 🌀", "🚀 Built, not bought 💎", "🔥 Kill them with success and bury them with a smile 😏",
+    "💫 Pain is temporary, pride is forever 🏆", "🌟 Stay focused and extra shiny ✨", "🔥 Simplicity is the ultimate sophistication 👑"
 ]
 
 nicknames_list = [
-    "🔥『 ᴅᴇᴠɪʟ 』🔥",
-    "👑 ʙᴀᴅ ʙᴏʏ 👑",
-    "⚡ ʟᴇɢᴇɴᴅ ⚡",
-    "😎 ꜱᴛʏʟɪꜱʜ ᴋɪɴɢ 😎",
-    "💫 ᴍʏꜱᴛᴇʀɪᴏᴜꜱ 💫",
-    "🎯 ꜱɴɪᴘᴇʀ ᴋɪɴɢ 🎯",
-    "💎 ʀᴏʏᴀʟ ʙᴏʏ 💎",
-    "🔥 ꜰɪʀᴇ ꜱᴛᴏʀᴍ 🔥"
+    "🔥 ᴀʀʏᴀɴ ᴀʜᴍᴇᴅ 🔥", "👑 ᴛᴀɴᴠɪʀ ʜᴏꜱꜱᴀɪɴ 👑", "⚡ ꜱᴀᴋɪʙ ᴄʜᴏᴡᴅʜᴜʀʏ ⚡", "😎 ꜰᴀʜɪᴍ ɪꜱʟᴀᴍ 😎",
+    "💫 ꜱᴀᴅɪᴀ ʀᴀʜᴍᴀɴ 💫", "🌟 ᴀɴɪᴋᴀ ᴛᴀʙᴀꜱꜱᴜᴍ 🌟", "💎 ᴛᴀꜱꜰɪᴀ ᴜᴅᴅɪɴ 💎", "🎯 ɴᴏꜱʜɪɴ ᴊᴀɴɴᴀᴛ 🎯",
+    "🔥 ʀᴀᴋɪʙ ʜᴀꜱᴀɴ 🔥", "👑 ᴍᴇʜᴇᴅɪ ꜱᴀʀᴋᴇʀ 👑", "⚡ ꜰᴀʀɪᴀ ɪꜱʜʀᴀᴛ ⚡", "😎 ꜱᴜᴍᴀɪʏᴀ ᴀᴋᴛʜᴇʀ 😎",
+    "💫 ᴊᴀɴɴᴀᴛᴜʟ ꜰᴇʀᴅᴏᴜꜱ 💫", "🌟 ᴀʀɪꜰ ᴍᴏʟʟᴀʜ 🌟", "🔥 ꜱʜᴀɴᴛᴏ ʙʜᴜɪʏᴀɴ 🔥", "👑 ɪꜱʜʀᴀᴛ ᴊᴀʜᴀɴ 👑",
+    "⚡ ɴᴀʏᴇᴇᴍ ɪꜱʟᴀᴍ ⚡", "😎 ᴍᴀʜɪɴ ᴀʜᴍᴇᴅ 😎", "💫 ꜱᴀʙʙɪʀ ʜᴏꜱꜱᴀɪɴ 💫", "🌟 ʀɪʏᴀ ᴍᴏɴɪ 🌟",
+    "🔥 ᴍᴜɴᴀ ᴀᴋᴛʜᴇʀ 🔥", "👑 ᴛɪꜱʜᴀ ᴍᴏɴɪ 👑", "⚡ ᴍɪᴍ ᴀᴋᴛʜᴇʀ ⚡", "😎 ɴᴜꜱʀᴀᴛ ᴊᴀʜᴀɴ 😎",
+    "💫 ꜱᴀʙʀɪɴᴀ ʏᴀꜱᴍɪɴ 💫", "🌟 ꜰᴀʀᴢᴀɴᴀ ʙᴇɢᴜᴍ 🌟", "🔥 ʟᴀᴍɪᴀ ɪꜱʟᴀᴍ 🔥", "👑 ᴍᴀʟɪʜᴀ ᴛᴀʙᴀꜱꜱᴜᴍ 👑",
+    "⚡ ᴊᴀʜɪᴅ ʜᴀꜱᴀɴ ⚡", "😎 ꜰᴀʏꜱᴀʟ ᴀʜᴍᴇᴅ 😎", "💫 ɴᴀʙɪʟ ᴄʜᴏᴡᴅʜᴜʀʏ 💫", "🌟 ꜱʜɪʜᴀʙ ᴜᴅᴅɪɴ 🌟",
+    "🔥 ᴀꜱʜɪᴋ ʀᴀʜᴍᴀɴ 🔥", "👑 ᴛᴀʀɪǫ ɪꜱʟᴀᴍ 👑", "⚡ ꜱᴏʜᴀɴ ꜱᴀʀᴋᴇʀ ⚡", "😎 ᴀʀᴍᴀɴ ʜᴏꜱꜱᴀɪɴ 😎",
+    "💫 ʀɪꜰᴀᴛ ᴀʜᴍᴇᴅ 💫", "🌟 ꜱɪᴀᴍ ᴄʜᴏᴡᴅʜᴜʀʏ 🌟", "🔥 ᴢɪʜᴀᴅ ɪꜱʟᴀᴍ 🔥", "👑 ᴛᴏᴜʜɪᴅ ʜᴏꜱꜱᴀɪɴ 👑",
+    "⚡ ʀᴀʜᴀᴛ ᴀʜᴍᴇᴅ ⚡", "😎 ɴᴀꜰᴇᴇꜱ ᴄʜᴏᴡᴅʜᴜʀʏ 😎", "💫 ᴀᴅɴᴀɴ ɪꜱʟᴀᴍ 💫", "🌟 ᴛᴀᴍɪᴍ ɪqʙᴀʟ 🌟",
+    "🔥 ᴍᴀꜱʜʀᴀꜰᴇ ᴍOʀᴛᴀᴢᴀ 🔥", "👑 ꜱʜᴀᴋɪʟ ᴀʜᴍᴇᴅ 👑", "⚡ ꜱᴀᴢᴢᴀᴅ ʜᴏꜱꜱᴀɪɴ ⚡", "😎 ᴊOʏ ᴄʜᴏᴡᴅʜᴜʀʏ 😎",
+    "💫 ɴɪʙɪʀ ɪꜱʟᴀᴍ 💫", "🌟 ꜰᴀʜᴀᴅ ᴀʜᴍᴇᴅ 🌟", "🔥 ʀɪᴅOY ʜᴀꜱᴀɴ 🔥", "👑 ᴀʟᴠɪ ꜱᴀʀᴋᴇʀ 👑"
 ]
 
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
