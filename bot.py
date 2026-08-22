@@ -28,7 +28,8 @@ male_first_names = [
     'Nizam', 'Kamrul', 'Monirul', 'Ashraful', 'Enamul', 'Kamruzzaman', 'Shah Alam', 'Moniruzzaman', 'Tariqul', 'Sharif',
     'Shakawat', 'Delwar', 'Mokbul', 'Babul', 'Kalam', 'Baten', 'Kashem', 'Zillur', 'Mokles', 'Shahidul', 'Anwar',
     'Nurul', 'Mokhlesur', 'Mozammel', 'Sirajul', 'Humayun', 'Golam', 'Mostafa', 'Shahjahan', 'Monir Hossain',
-    'Siddik', 'Monowar', 'Ruhul', 'Toufiq', 'Shaheen', 'Mizan', 'Bacchu', 'Dulal', 'Ferdous', 'Manik'
+    'Siddik', 'Monowar', 'Ruhul', 'Toufiq', 'Shaheen', 'Mizan', 'Bacchu', 'Dulal', 'Ferdous', 'Manik',
+    'Zubair', 'Fahim', 'Nayeem', 'Tanvir', 'Arman', 'Sabbir', 'Rakib', 'Mehedi', 'Mahin', 'Shanto'
 ]
 
 female_first_names = [
@@ -44,20 +45,33 @@ female_first_names = [
     'Maisha', 'Faiza', 'Nabila', 'Rumpa', 'Moumita', 'Srabanti', 'Juthika', 'Anannya', 'Nargis', 'Parvin', 'Salma',
     'Rokeya', 'Shahnaz', 'Nasrin', 'Jahanara', 'Rehana', 'Sufia', 'Khushi', 'Jahan', 'Farida', 'Hasina', 'Nazma',
     'Purnima', 'Bably', 'Shikha', 'Rekha', 'Monira', 'Lucky', 'Poly', 'Beauty', 'Rozy', 'Joya', 'Tanha',
-    'Sathi', 'Bithi', 'Shampa', 'Sheuly', 'Kohinoor', 'Ruma', 'Lima', 'Jui', 'Swapna'
+    'Sathi', 'Bithi', 'Shampa', 'Sheuly', 'Kohinoor', 'Ruma', 'Lima', 'Jui', 'Swapna', 'Popy'
 ]
 
-last_names = [
+male_last_names = [
     'Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman', 'Uddin', 'Talukder', 'Hasan', 'Sarker',
     'Ali', 'Mollah', 'Bhuiyan', 'Mazumder', 'Siddique', 'Karim', 'Talukdar', 'Mia', 'Biswas', 'Roy',
-    'Akther', 'Begum', 'Khatun', 'Dewan', 'Miah', 'Sheikh', 'Bhowmick', 'Sen', 'Das', 'Munshi',
-    'Shikder', 'Sarder', 'Pramanik', 'Vhowmick', 'Barua', 'Chakma', 'Golder', 'Hajra', 'Kundu', 'Nag',
-    'Saha', 'Datta', 'Pal', 'De', 'Nath', 'Ghosh', 'Banerjee', 'Chatterjee', 'Mukherjee', 'Dhar',
-    'Sultana', 'Chakraborty', 'Bhattacharya', 'Ganguly', 'Paul', 'Barman', 'Sarkar', 'Malakar'
+    'Dewan', 'Miah', 'Sheikh', 'Bhowmick', 'Sen', 'Das', 'Munshi', 'Shikder', 'Sarder', 'Pramanik',
+    'Vhowmick', 'Barua', 'Chakma', 'Golder', 'Hajra', 'Kundu', 'Nag', 'Saha', 'Datta', 'Pal', 'De',
+    'Nath', 'Ghosh', 'Banerjee', 'Chatterjee', 'Mukherjee', 'Dhar', 'Chakraborty', 'Bhattacharya',
+    'Ganguly', 'Paul', 'Barman', 'Sarkar', 'Malakar'
 ]
 
-gamer_tags = ['Shadow', 'Viper', 'Ghost', 'Sniper', 'Ninja', 'Cyber', 'Nexus', 'Blaze', 'Storm', 'Titan', 'Apex', 'Phantom', 'Zero', 'Rogue', 'Venom', 'Spectre']
-cool_words = ['Alpha', 'Beta', 'Zero', 'Dark', 'Swift', 'Prime', 'Elite', 'Legend', 'Savage', 'Cyborg', 'Rebel', 'Ghost', 'Titan', 'Neon']
+female_last_names = [
+    'Akther', 'Begum', 'Khatun', 'Sultana', 'Ahmed', 'Hossain', 'Chowdhury', 'Islam', 'Khan', 'Rahman',
+    'Uddin', 'Hasan', 'Sarker', 'Ali', 'Biswas', 'Roy', 'Sen', 'Das', 'Barua', 'Saha', 'Pal', 'Ghosh',
+    'Akter', 'Tabassum', 'Jahan', 'Parvin', 'Nasrin', 'Sharmin'
+]
+
+gamer_tags = [
+    'Shadow', 'Viper', 'Ghost', 'Sniper', 'Ninja', 'Cyber', 'Nexus', 'Blaze', 'Storm', 'Titan', 'Apex', 'Phantom', 
+    'Zero', 'Rogue', 'Venom', 'Spectre', 'Alpha', 'Omega', 'Demon', 'Dragon', 'Phoenix', 'Wolf', 'Hawk', 'Matrix'
+]
+
+cool_words = [
+    'Alpha', 'Beta', 'Zero', 'Dark', 'Swift', 'Prime', 'Elite', 'Legend', 'Savage', 'Cyborg', 'Rebel', 'Ghost', 
+    'Titan', 'Neon', 'Cosmic', 'Storm', 'Hyper', 'Turbo', 'Matrix', 'Vortex', 'Stellar', 'Quantum', 'Nexus'
+]
 
 bios_list = [
     "👑 King of my own world ✨", "🚀 Too glam to give a damn 😎", "🔥 Living life on my own terms 💯",
@@ -232,12 +246,12 @@ def handle_callback(call):
 
         if call.data.startswith('boy_') and not call.data == 'boy_nick':
             style = call.data.replace('boy_', '')
-            raw_name = f"{random.choice(male_first_names)} {random.choice(last_names)}"
+            raw_name = f"{random.choice(male_first_names)} {random.choice(male_last_names)}"
             result_text = apply_unicode_font(raw_name, style)
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='boy_font_menu'))
         elif call.data.startswith('girl_') and not call.data == 'girl_nick':
             style = call.data.replace('girl_', '')
-            raw_name = f"{random.choice(female_first_names)} {random.choice(last_names)}"
+            raw_name = f"{random.choice(female_first_names)} {random.choice(female_last_names)}"
             result_text = apply_unicode_font(raw_name, style)
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='girl_font_menu'))
         elif call.data == 'boy_nick':
@@ -258,13 +272,13 @@ def handle_callback(call):
             result_text = f"{random.choice(gamer_tags)}_{random.choice(male_first_names).lower()}{random.randint(10,999)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_gamer'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
         elif call.data == 'user_pro':
-            result_text = f"{random.choice(male_first_names + female_first_names).lower()}.{random.choice(last_names).lower()}{random.randint(100,999)}"
+            result_text = f"{random.choice(male_first_names + female_first_names).lower()}.{random.choice(male_last_names + female_last_names).lower()}{random.randint(100,999)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_pro'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
         elif call.data == 'user_cool':
             result_text = f"x_{random.choice(cool_words).lower()}_{random.choice(male_first_names + female_first_names).lower()}_x"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_cool'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
         elif call.data == 'user_random':
-            result_text = f"{random.choice(cool_words).lower()}{random.choice(last_names).lower()}{random.randint(1000,9999)}"
+            result_text = f"{random.choice(cool_words).lower()}{random.choice(male_last_names + female_last_names).lower()}{random.randint(1000,9999)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_random'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
         elif call.data.startswith('pass_'):
             length = int(call.data.replace('pass_', ''))
@@ -275,11 +289,11 @@ def handle_callback(call):
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_bio'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
         elif call.data == 'gen_stylish':
             f_name = random.choice(male_first_names + female_first_names).lower()
-            l_name = random.choice(last_names).lower()
+            l_name = random.choice(male_last_names + female_last_names).lower()
             result_text = f"{f_name} {l_name} 😎⚡"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_stylish'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
         elif call.data == 'gen_random':
-            result_text = f"{random.choice(male_first_names + female_first_names)} {random.choice(last_names)} {random.choice(emojis)}"
+            result_text = f"{random.choice(male_first_names + female_first_names)} {random.choice(male_last_names + female_last_names)} {random.choice(emojis)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_random'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
 
         if call.data in ['gen_toss', 'gen_coin_flip']:
