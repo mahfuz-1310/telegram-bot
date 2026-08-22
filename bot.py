@@ -222,8 +222,8 @@ def handle_callback(call):
             result_text = f"{random.choice(male_first_names + female_first_names)} {random.choice(last_names)} {random.choice(emojis)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_random'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
 
-        is_code_format = 'pass_' in call.data or call.data.startswith('user_')
-        text = f'✨ *Result:*\n\n`{result_text}`' if is_code_format else f'✨ *Result:*\n\n{result_text}'
+        # Wrapped inside backticks (``) so tapping it automatically copies to clipboard in Telegram
+        text = f'✨ *Result:*\n\n`{result_text}`'
         
         try:
             bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
