@@ -45,7 +45,23 @@ bios_list = [
     "💫 Born to express, not to impress 🎯",
     "🌟 Dream big, work hard, stay humble 🙏",
     "💎 Reality is wrong, dreams are for real 🌙",
-    "⚡ Attitude is my default setting 🔥"
+    "⚡ Attitude is my default setting 🔥",
+    "😎 Don't study me, you won't graduate 📚",
+    "🔥 Catch flights, not feelings ✈️",
+    "👑 Work hard in silence, let success make the noise 🤫",
+    "✨ Be a warrior, not a worrier ⚔️",
+    "🚀 Stay low-key, let them assume 🕶️",
+    "💫 Master of my own fate 🎲",
+    "🌟 Silence is the best response to a fool 🦉",
+    "🔥 Born to rule, forced to school 🎒",
+    "💎 Classy, sassy, and a bit smart-assy 😎",
+    "⚡ Keep your heels, head, and standards high 👠",
+    "👑 Loyalty is rare, if you find it, keep it 🤝",
+    "🚀 Risk taker, rule breaker 🌪️",
+    "🔥 Haters gonna hate, but I accelerate 🏎️",
+    "💫 Not arrogant, just better 👑",
+    "🌟 Creating my own sunshine ☀️",
+    "⚡ Focused, determined, unstoppable 🎯"
 ]
 
 nicknames_list = [
@@ -222,7 +238,6 @@ def handle_callback(call):
             result_text = f"{random.choice(male_first_names + female_first_names)} {random.choice(last_names)} {random.choice(emojis)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_random'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
 
-        # Wrapped inside backticks (``) so tapping it automatically copies to clipboard in Telegram
         text = f'✨ *Result:*\n\n`{result_text}`'
         
         try:
