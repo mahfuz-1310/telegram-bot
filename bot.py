@@ -10,7 +10,7 @@ API_TOKEN = '8994060740:AAFpgfuGajnOA-HLAmae5QmWaypDdRIR_aE'
 bot = telebot.TeleBot(API_TOKEN, threaded=True)
 app = Flask(__name__)
 
-# Massively Expanded Data Lists
+# Super Expanded Data Lists
 male_first_names = [
     'Aryan', 'Tanvir', 'Rahim', 'Sakib', 'Fahim', 'Nayeem', 'Rakib', 'Mehedi', 'Mahin', 'Sabbir', 'Arif', 'Shanto',
     'Imran', 'Tanim', 'Jahid', 'Raihan', 'Faysal', 'Nabil', 'Shihab', 'Ashik', 'Tariq', 'Sohan', 'Rokon', 'Nayem',
@@ -21,7 +21,15 @@ male_first_names = [
     'Akash', 'Niloy', 'Joyanta', 'Protap', 'Bappy', 'Rony', 'Rubel', 'Jewel', 'Suvro', 'Dipu', 'Milon',
     'Juel', 'Moin', 'Emon', 'Hridoy', 'Pias', 'Plabon', 'Shuvo', 'Bijoy', 'Sajib', 'Tuhin', 'Rana',
     'Zayed', 'Shoaib', 'Fardeen', 'Nafis', 'Abrar', 'Wafi', 'Zayn', 'Rayyan', 'Ahnaf', 'Mahtab',
-    'Saad', 'Rakin', 'Tasin', 'Samin', 'Shafin', 'Zafir', 'Azwad', 'Ishan', 'Arham', 'Ayyan', 'Zuhair', 'Rayaan'
+    'Saad', 'Rakin', 'Tasin', 'Samin', 'Shafin', 'Zafir', 'Azwad', 'Ishan', 'Arham', 'Ayyan', 'Zuhair', 'Rayaan',
+    'Ahsan', 'Sabit', 'Faraz', 'Zayan', 'Ayan', 'Aarav', 'Kabir', 'Zian', 'Reyansh', 'Vivaan', 'Adil',
+    'Hamza', 'Ibrahim', 'Yusuf', 'Musa', 'Sulaiman', 'Yahya', 'Danyal', 'Zayd', 'Zubair', 'Talha', 'Umar', 'Usman',
+    'Nasim', 'Habib', 'Jamal', 'Kamal', 'Rafiq', 'Salam', 'Barkat', 'Asad', 'Maksud', 'Farid', 'Jamil', 'Nasir',
+    'Nizam', 'Kamrul', 'Monirul', 'Ashraful', 'Enamul', 'Kamruzzaman', 'Shah Alam', 'Moniruzzaman', 'Tariqul', 'Sharif',
+    'Shakawat', 'Delwar', 'Mokbul', 'Babul', 'Kalam', 'Baten', 'Kashem', 'Zillur', 'Mokles', 'Shahidul', 'Anwar',
+    'Nurul', 'Mokhlesur', 'Mozammel', 'Sirajul', 'Humayun', 'Golam', 'Mostafa', 'Shahjahan', 'Monir Hossain',
+    'Siddik', 'Monowar', 'Ruhul', 'Toufiq', 'Shaheen', 'Mizan', 'Bacchu', 'Dulal', 'Ferdous', 'Manik',
+    'Sabbir', 'Nayeem', 'Rashed', 'Jubayer', 'Raihan', 'Fahim', 'Tanvir', 'Sakib', 'Mehedi', 'Arman'
 ]
 
 female_first_names = [
@@ -33,7 +41,11 @@ female_first_names = [
     'Tasnim', 'Fiza', 'Ayesha', 'Fatima', 'Khadija', 'Zunaira', 'Madiha', 'Raisa', 'Afifa', 'Ahona', 'Orpi',
     'Mehek', 'Jinia', 'Tanni', 'Popy', 'Bristi', 'Sraboni', 'Mahi', 'Antra', 'Simran', 'Ritu', 'Nitu', 'Subah',
     'Zoya', 'Zara', 'Areej', 'Inaya', 'Ayra', 'Aliza', 'Rania', 'Safiya', 'Hafsa', 'Maryam', 'Saba',
-    'Dania', 'Liza', 'Mehvish', 'Anaya', 'Eshal', 'Hoorain', 'Rabeya', 'Tasneem', 'Warda', 'Zunairah', 'Abeer'
+    'Dania', 'Liza', 'Mehvish', 'Anaya', 'Eshal', 'Hoorain', 'Rabeya', 'Tasneem', 'Warda', 'Zunairah', 'Abeer',
+    'Maisha', 'Faiza', 'Nabila', 'Rumpa', 'Moumita', 'Srabanti', 'Juthika', 'Anannya', 'Nargis', 'Parvin', 'Salma',
+    'Rokeya', 'Shahnaz', 'Nasrin', 'Jahanara', 'Rehana', 'Sufia', 'Khushi', 'Jahan', 'Farida', 'Hasina', 'Nazma',
+    'Purnima', 'Bably', 'Shikha', 'Rekha', 'Monira', 'Lucky', 'Poly', 'Beauty', 'Rozy', 'Joya', 'Tanha',
+    'Sathi', 'Bithi', 'Shampa', 'Sheuly', 'Kohinoor', 'Ruma', 'Lima', 'Jui', 'Swapna', 'Popy'
 ]
 
 last_names = [
@@ -62,23 +74,27 @@ bios_list = [
     "👑 Legends never die, they multiply ⚡", "😎 Born to win, forced to work 💯", "🚀 Sky is not the limit, my mind is 🌌",
     "💫 Peace of mind over everything 🕊️", "🔥 Confidence is silent, insecurities are loud 🦁", "👑 Make it happen, shock everyone ⚡",
     "✨ Normal is an illusion 🌀", "🚀 Built, not bought 💎", "🔥 Kill them with success and bury them with a smile 😏",
-    "💫 Pain is temporary, pride is forever 🏆", "🌟 Stay focused and extra shiny ✨", "🔥 Simplicity is the ultimate sophistication 👑"
+    "💫 Pain is temporary, pride is forever 🏆", "🌟 Stay focused and extra shiny ✨", "🔥 Simplicity is the ultimate sophistication 👑",
+    "💯 Actions speak louder than words ⚡", "👑 Queens don't complete kings, they multiply them 💎", "🔥 Born to shine, not to be dimmed ✨",
+    "🌟 Chase your dreams with open eyes 🌌", "🚀 Sky's the limit when you believe 💫", "😎 Born to stand out, never to follow 🦅"
 ]
 
-nicknames_list = [
+male_nicknames_list = [
     "🔥 ᴀʀʏᴀɴ ᴀʜᴍᴇᴅ 🔥", "👑 ᴛᴀɴᴠɪʀ ʜᴏꜱꜱᴀɪɴ 👑", "⚡ ꜱᴀᴋɪʙ ᴄʜᴏᴡᴅʜᴜʀʏ ⚡", "😎 ꜰᴀʜɪᴍ ɪꜱʟᴀᴍ 😎",
+    "🔥 ʀᴀᴋɪʙ ʜᴀꜱᴀɴ 🔥", "👑 ᴍᴇʜᴇᴅɪ ꜱᴀʀᴋᴇʀ 👑", "🔥 ꜱʜᴀɴᴛᴏ ʙʜᴜɪʏᴀɴ 🔥", "⚡ ɴᴀʏᴇᴇᴍ ɪꜱʟᴀᴍ ⚡",
+    "😎 ᴍᴀʜɪɴ ᴀʜᴍᴇᴅ 😎", "💫 ꜱᴀʙʙɪʀ ʜᴏꜱꜱᴀɪɴ 💫", "⚡ ᴊᴀʜɪᴅ ʜᴀꜱᴀɴ ⚡", "😎 ꜰᴀʏꜱᴀʟ ᴀʜᴍᴇᴅ 😎",
+    "💫 ɴᴀʙɪʟ ᴄʜᴏᴡᴅʜᴜʀʏ 💫", "🌟 ꜱʜɪʜᴀʙ ᴜᴅᴅɪɴ 🌟", "🔥 ᴀꜱʜɪᴋ ʀᴀʜᴍᴀɴ 🔥", "👑 ᴛᴀʀɪǫ ɪꜱʟᴀᴍ 👑",
+    "⚡ ꜱᴏʜᴀɴ ꜱᴀʀᴋᴇʀ ⚡", "😎 ᴀʀᴍᴀɴ ʜᴏꜱꜱᴀɪɴ 😎", "💫 ʀɪꜰᴀᴛ ᴀʜᴍᴇᴅ 💫", "🌟 ꜱɪᴀᴍ ᴄʜᴏᴡᴅʜᴜʀʏ 🌟",
+    "🔥 ᴢɪʜᴀᴅ ɪꜱʟᴀᴍ 🔥", "👑 ᴛᴏᴜʜɪᴅ ʜᴏꜱꜱᴀɪɴ 👑", "⚡ ʀᴀʜᴀᴛ ᴀʜᴍᴇᴅ ⚡", "😎 ɴᴀꜰᴇᴇꜱ ᴄʜᴏᴡᴅʜᴜʀʏ 😎"
+]
+
+female_nicknames_list = [
     "💫 ꜱᴀᴅɪᴀ ʀᴀʜᴍᴀɴ 💫", "🌟 ᴀɴɪᴋᴀ ᴛᴀʙᴀꜱꜱᴜᴍ 🌟", "💎 ᴛᴀꜱꜰɪᴀ ᴜᴅᴅɪɴ 💎", "🎯 ɴᴏꜱʜɪɴ ᴊᴀɴɴᴀᴛ 🎯",
-    "🔥 ʀᴀᴋɪʙ ʜᴀꜱᴀɴ 🔥", "👑 ᴍᴇʜᴇᴅɪ ꜱᴀʀᴋᴇʀ 👑", "⚡ ꜰᴀʀɪᴀ ɪꜱʜʀᴀᴛ ⚡", "😎 ꜱᴜᴍᴀɪʏᴀ ᴀᴋᴛʜᴇʀ 😎",
-    "💫 ᴊᴀɴɴᴀᴛᴜʟ ꜰᴇʀᴅᴏᴜꜱ 💫", "🌟 ᴀʀɪꜰ ᴍᴏʟʟᴀʜ 🌟", "🔥 ꜱʜᴀɴᴛᴏ ʙʜᴜɪʏᴀɴ 🔥", "👑 ɪꜱʜʀᴀᴛ ᴊᴀʜᴀɴ 👑",
-    "⚡ ɴᴀʏᴇᴇᴍ ɪꜱʟᴀᴍ ⚡", "😎 ᴍᴀʜɪɴ ᴀʜᴍᴇᴅ 😎", "💫 ꜱᴀʙʙɪʀ ʜᴏꜱꜱᴀɪɴ 💫", "🌟 ʀɪʏᴀ ᴍᴏɴɪ 🌟",
-    "🔥 ᴍᴜɴᴀ ᴀᴋᴛʜᴇʀ 🔥", "👑 ᴛɪꜱʜᴀ ᴍᴏɴɪ 👑", "⚡ ᴍɪᴍ ᴀᴋᴛʜᴇʀ ⚡", "😎 ɴᴜꜱʀᴀᴛ ᴊᴀʜᴀɴ 😎",
-    "💫 ꜱᴀʙʀɪɴᴀ ʏᴀꜱᴍɪɴ 💫", "🌟 ꜰᴀʀᴢᴀɴᴀ ʙᴇɢᴜᴍ 🌟", "🔥 ʟᴀᴍɪᴀ ɪꜱʟᴀᴍ 🔥", "👑 ᴍᴀʟɪʜᴀ ᴛᴀʙᴀꜱꜱᴜᴍ 👑",
-    "⚡ ᴊᴀʜɪᴅ ʜᴀꜱᴀɴ ⚡", "😎 ꜰᴀʏꜱᴀʟ ᴀʜᴍᴇᴅ 😎", "💫 ɴᴀʙɪʟ ᴄʜᴏᴡᴅʜᴜʀʏ 💫", "🌟 ꜱʜɪʜᴀʙ ᴜᴅᴅɪɴ 🌟",
-    "🔥 ᴀꜱʜɪᴋ ʀᴀʜᴍᴀɴ 🔥", "👑 ᴛᴀʀɪǫ ɪꜱʟᴀᴍ 👑", "⚡ ꜱᴏʜᴀɴ ꜱᴀʀᴋᴇʀ ⚡", "😎 ᴀʀᴍᴀɴ ʜᴏꜱꜱᴀɪɴ 😎",
-    "💫 ʀɪꜰᴀᴛ ᴀʜᴍᴇᴅ 💫", "🌟 ꜱɪᴀᴍ ᴄʜᴏᴡᴅʜᴜʀʏ 🌟", "🔥 ᴢɪʜᴀᴅ ɪꜱʟᴀᴍ 🔥", "👑 ᴛᴏᴜʜɪᴅ ʜᴏꜱꜱᴀɪɴ 👑",
-    "⚡ ʀᴀʜᴀᴛ ᴀʜᴍᴇᴅ ⚡", "😎 ɴᴀꜰᴇᴇꜱ ᴄʜᴏᴡᴅʜᴜʀʏ 😎", "💫 ᴀᴅɴᴀɴ ɪꜱʟᴀᴍ 💫", "🌟 ᴛᴀᴍɪᴍ ɪqʙᴀʟ 🌟",
-    "🔥 ᴍᴀꜱʜʀᴀꜰᴇ ᴍOʀᴛᴀᴢᴀ 🔥", "👑 ꜱʜᴀᴋɪʟ ᴀʜᴍᴇᴅ 👑", "⚡ ꜱᴀᴢᴢᴀᴅ ʜᴏꜱꜱᴀɪɴ ⚡", "😎 ᴊOʏ ᴄʜᴏᴡᴅʜᴜʀʏ 😎",
-    "💫 ɴɪʙɪʀ ɪꜱʟᴀᴍ 💫", "🌟 ꜰᴀʜᴀᴅ ᴀʜᴍᴇᴅ 🌟", "🔥 ʀɪᴅOY ʜᴀꜱᴀɴ 🔥", "👑 ᴀʟᴠɪ ꜱᴀʀᴋᴇʀ 👑"
+    "⚡ ꜰᴀʀɪᴀ ɪꜱʜʀᴀᴛ ⚡", "😎 ꜱᴜᴍᴀɪʏᴀ ᴀᴋᴛʜᴇʀ 😎", "💫 ᴊᴀɴɴᴀᴛᴜʟ ꜰᴇʀᴅᴏᴜꜱ 💫", "🌟 ᴀʀɪꜰᴀ ᴋʜᴀᴛᴜɴ 🌟",
+    "🌟 ʀɪʏᴀ ᴍᴏɴɪ 🌟", "🔥 ᴍᴜɴᴀ ᴀᴋᴛʜᴇʀ 🔥", "👑 ᴛɪꜱʜᴀ ᴍᴏɴɪ 👑", "⚡ ᴍɪᴍ ᴀᴋᴛʜᴇʀ ⚡",
+    "😎 ɴᴜꜱʀᴀᴛ ᴊᴀʜᴀɴ 😎", "💫 ꜱᴀʙʀɪɴᴀ ʏᴀꜱᴍɪɴ 💫", "🌟 ꜰᴀʀᴢᴀɴᴀ ʙᴇɢᴜᴍ 🌟", "🔥 ʟᴀᴍɪᴀ ɪꜱʟᴀᴍ 🔥",
+    "👑 ᴍᴀʟɪʜਾ ᴛᴀʙᴀꜱꜱᴜᴍ 👑", "⚡ ᴢᴇʀɪɴ ᴛᴀꜱɴɪᴍ ⚡", "😎 ᴘʀɪʏᴀ ʀAʏ 😎", "💫 ꜱᴀɴᴊɪᴅᴀ ɪꜱʟᴀᴍ 💫",
+    "🌟 ᴍɪᴛᴜ ᴀᴋᴛʜᴇʀ 🌟", "🔥 ʙʀɪꜱᴛʏ ʀᴀʜᴍᴀɴ 🔥", "👑 ɴɪʟᴀ ᴄʜᴏᴡᴅʜᴜʀʏ 👑", "⚡ ᴛᴀɴɪᴀ ɪꜱʟᴀᴍ ⚡"
 ]
 
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
@@ -199,20 +215,36 @@ def handle_callback(call):
             bot.edit_message_text('🔑 *Select Password Length:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
             return
 
+        if call.data == 'gen_nick':
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            markup.add(
+                types.InlineKeyboardButton('👦 Boy Nickname', callback_data='boy_nick'),
+                types.InlineKeyboardButton('👧 Girl Nickname', callback_data='girl_nick'),
+                types.InlineKeyboardButton('🔙 Back to Menu', callback_data='main_menu')
+            )
+            bot.edit_message_text('🏷️ *Select Nickname Category:*', chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
+            return
+
         # Generators Output Logic
         result_text = ''
         markup = types.InlineKeyboardMarkup(row_width=2)
 
-        if call.data.startswith('boy_'):
+        if call.data.startswith('boy_') and not call.data == 'boy_nick':
             style = call.data.replace('boy_', '')
             raw_name = f"{random.choice(male_first_names)} {random.choice(last_names)}"
             result_text = apply_unicode_font(raw_name, style)
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='boy_font_menu'))
-        elif call.data.startswith('girl_'):
+        elif call.data.startswith('girl_') and not call.data == 'girl_nick':
             style = call.data.replace('girl_', '')
             raw_name = f"{random.choice(female_first_names)} {random.choice(last_names)}"
             result_text = apply_unicode_font(raw_name, style)
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data=call.data), types.InlineKeyboardButton('🔙 Back', callback_data='girl_font_menu'))
+        elif call.data == 'boy_nick':
+            result_text = random.choice(male_nicknames_list)
+            markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='boy_nick'), types.InlineKeyboardButton('🔙 Back', callback_data='gen_nick'))
+        elif call.data == 'girl_nick':
+            result_text = random.choice(female_nicknames_list)
+            markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='girl_nick'), types.InlineKeyboardButton('🔙 Back', callback_data='gen_nick'))
         elif call.data == 'user_gamer':
             result_text = f"{random.choice(gamer_tags)}_{random.choice(male_first_names).lower()}{random.randint(10,999)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_gamer'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
@@ -232,9 +264,6 @@ def handle_callback(call):
         elif call.data == 'gen_bio':
             result_text = random.choice(bios_list)
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_bio'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
-        elif call.data == 'gen_nick':
-            result_text = random.choice(nicknames_list)
-            markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_nick'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
         elif call.data == 'gen_stylish':
             f_name = random.choice(male_first_names + female_first_names).lower()
             l_name = random.choice(last_names).lower()
