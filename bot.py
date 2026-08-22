@@ -10,7 +10,7 @@ API_TOKEN = '8994060740:AAFpgfuGajnOA-HLAmae5QmWaypDdRIR_aE'
 bot = telebot.TeleBot(API_TOKEN, threaded=True)
 app = Flask(__name__)
 
-# Super Expanded Data Lists
+# Expanded Data Lists
 male_first_names = [
     'Aryan', 'Tanvir', 'Rahim', 'Sakib', 'Fahim', 'Nayeem', 'Rakib', 'Mehedi', 'Mahin', 'Sabbir', 'Arif', 'Shanto',
     'Imran', 'Tanim', 'Jahid', 'Raihan', 'Faysal', 'Nabil', 'Shihab', 'Ashik', 'Tariq', 'Sohan', 'Rokon', 'Nayem',
@@ -28,8 +28,7 @@ male_first_names = [
     'Nizam', 'Kamrul', 'Monirul', 'Ashraful', 'Enamul', 'Kamruzzaman', 'Shah Alam', 'Moniruzzaman', 'Tariqul', 'Sharif',
     'Shakawat', 'Delwar', 'Mokbul', 'Babul', 'Kalam', 'Baten', 'Kashem', 'Zillur', 'Mokles', 'Shahidul', 'Anwar',
     'Nurul', 'Mokhlesur', 'Mozammel', 'Sirajul', 'Humayun', 'Golam', 'Mostafa', 'Shahjahan', 'Monir Hossain',
-    'Siddik', 'Monowar', 'Ruhul', 'Toufiq', 'Shaheen', 'Mizan', 'Bacchu', 'Dulal', 'Ferdous', 'Manik',
-    'Sabbir', 'Nayeem', 'Rashed', 'Jubayer', 'Raihan', 'Fahim', 'Tanvir', 'Sakib', 'Mehedi', 'Arman'
+    'Siddik', 'Monowar', 'Ruhul', 'Toufiq', 'Shaheen', 'Mizan', 'Bacchu', 'Dulal', 'Ferdous', 'Manik'
 ]
 
 female_first_names = [
@@ -45,7 +44,7 @@ female_first_names = [
     'Maisha', 'Faiza', 'Nabila', 'Rumpa', 'Moumita', 'Srabanti', 'Juthika', 'Anannya', 'Nargis', 'Parvin', 'Salma',
     'Rokeya', 'Shahnaz', 'Nasrin', 'Jahanara', 'Rehana', 'Sufia', 'Khushi', 'Jahan', 'Farida', 'Hasina', 'Nazma',
     'Purnima', 'Bably', 'Shikha', 'Rekha', 'Monira', 'Lucky', 'Poly', 'Beauty', 'Rozy', 'Joya', 'Tanha',
-    'Sathi', 'Bithi', 'Shampa', 'Sheuly', 'Kohinoor', 'Ruma', 'Lima', 'Jui', 'Swapna', 'Popy'
+    'Sathi', 'Bithi', 'Shampa', 'Sheuly', 'Kohinoor', 'Ruma', 'Lima', 'Jui', 'Swapna'
 ]
 
 last_names = [
@@ -93,8 +92,8 @@ female_nicknames_list = [
     "⚡ ꜰᴀʀɪᴀ ɪꜱʜʀᴀᴛ ⚡", "😎 ꜱᴜᴍᴀɪʏᴀ ᴀᴋᴛʜᴇʀ 😎", "💫 ᴊᴀɴɴᴀᴛᴜʟ ꜰᴇʀᴅᴏᴜꜱ 💫", "🌟 ᴀʀɪꜰᴀ ᴋʜᴀᴛᴜɴ 🌟",
     "🌟 ʀɪʏᴀ ᴍᴏɴɪ 🌟", "🔥 ᴍᴜɴᴀ ᴀᴋᴛʜᴇʀ 🔥", "👑 ᴛɪꜱʜᴀ ᴍᴏɴɪ 👑", "⚡ ᴍɪᴍ ᴀᴋᴛʜᴇʀ ⚡",
     "😎 ɴᴜꜱʀᴀᴛ ᴊᴀʜᴀɴ 😎", "💫 ꜱᴀʙʀɪɴᴀ ʏᴀꜱᴍɪɴ 💫", "🌟 ꜰᴀʀᴢᴀɴᴀ ʙᴇɢᴜᴍ 🌟", "🔥 ʟᴀᴍɪᴀ ɪꜱʟᴀᴍ 🔥",
-    "👑 ᴍᴀʟɪʜਾ ᴛᴀʙᴀꜱꜱᴜᴍ 👑", "⚡ ᴢᴇʀɪɴ ᴛᴀꜱɴɪᴍ ⚡", "😎 ᴘʀɪʏᴀ ʀAʏ 😎", "💫 ꜱᴀɴᴊɪᴅᴀ ɪꜱʟᴀᴍ 💫",
-    "🌟 ᴍɪᴛᴜ ᴀᴋᴛʜᴇʀ 🌟", "🔥 ʙʀɪꜱᴛʏ ʀᴀʜᴍᴀɴ 🔥", "👑 ɴɪʟᴀ ᴄʜᴏᴡᴅʜᴜʀʏ 👑", "⚡ ᴛᴀɴɪᴀ ɪꜱʟᴀᴍ ⚡"
+    "👑 ᴍᴀʟɪʜᴀ ᴛᴀʙᴀꜱꜱᴜᴍ 👑", "⚡ ᴢᴇʀɪɴ ᴛᴀꜱɴɪᴍ ⚡", "😎 ᴘʀɪʏ🇦 ʀᴀʏ 😎", "💫 ꜱᴀɴᴊɪᴅᴀ ɪꜱʟᴀᴍ 💫",
+    "🌟 ᴍɪᴛᴜ ᴀᴋᴛʜᴇʀ 🌟", "🔥 ʙʀɪꜱᴛʏ ʀᴀʜᴍᴀɴ 🔥", "👑 ɴɪʟᴀ ᴄʜᴏᴡᴅʜᴜʀʏ 👑", "⚡ ᴛᴀɴɪ🇦 ɪꜱʟᴀᴍ ⚡"
 ]
 
 emojis = ['🔥', '✨', '👑', '😎', '💫', '🌟', '🚀', '🎯', '💯', '⚡', '💎']
@@ -144,8 +143,10 @@ def send_main_menu(message_or_call):
     btn_pass = types.InlineKeyboardButton('🔑 Password', callback_data='password_menu')
     btn_bio = types.InlineKeyboardButton('📝 Bio / Quotes', callback_data='gen_bio')
     btn_nick = types.InlineKeyboardButton('🏷️ Nickname', callback_data='gen_nick')
+    btn_toss = types.InlineKeyboardButton('🪙 Toss Coin', callback_data='gen_toss')
+    btn_flip = types.InlineKeyboardButton('🪙 Coin Flip', callback_data='gen_coin_flip')
     
-    markup.add(btn_male, btn_female, btn_stylish, btn_random, btn_user, btn_pass, btn_bio, btn_nick)
+    markup.add(btn_male, btn_female, btn_stylish, btn_random, btn_user, btn_pass, btn_bio, btn_nick, btn_toss, btn_flip)
     text = '🌟 *Ultimate Generator Bot*\n\nSelect a category:'
     
     try:
@@ -245,6 +246,14 @@ def handle_callback(call):
         elif call.data == 'girl_nick':
             result_text = random.choice(female_nicknames_list)
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='girl_nick'), types.InlineKeyboardButton('🔙 Back', callback_data='gen_nick'))
+        elif call.data == 'gen_toss':
+            toss_result = random.choice(["👑 Head (হেড)", "🦅 Tail (টেইল)"])
+            result_text = f"🪙 Toss Result: *{toss_result}*"
+            markup.add(types.InlineKeyboardButton('🔄 Toss Again', callback_data='gen_toss'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
+        elif call.data == 'gen_coin_flip':
+            flip_result = random.choice(["🪙 Heads (হেডস)", "🪙 Tails (টেইলস)"])
+            result_text = f"🔄 Coin Flipped!\n\nResult: *{flip_result}*"
+            markup.add(types.InlineKeyboardButton('🔄 Flip Again', callback_data='gen_coin_flip'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
         elif call.data == 'user_gamer':
             result_text = f"{random.choice(gamer_tags)}_{random.choice(male_first_names).lower()}{random.randint(10,999)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='user_gamer'), types.InlineKeyboardButton('🔙 Back', callback_data='username_menu'))
@@ -273,7 +282,10 @@ def handle_callback(call):
             result_text = f"{random.choice(male_first_names + female_first_names)} {random.choice(last_names)} {random.choice(emojis)}"
             markup.add(types.InlineKeyboardButton('🔄 Generate Again', callback_data='gen_random'), types.InlineKeyboardButton('🏠 Main Menu', callback_data='main_menu'))
 
-        text = f'✨ *Result:*\n\n`{result_text}`'
+        if call.data in ['gen_toss', 'gen_coin_flip']:
+            text = f'✨ *Result:*\n\n{result_text}'
+        else:
+            text = f'✨ *Result:*\n\n`{result_text}`'
         
         try:
             bot.edit_message_text(text, chat_id=call.message.chat.id, message_id=call.message.id, parse_mode='Markdown', reply_markup=markup)
